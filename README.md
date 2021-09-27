@@ -3,7 +3,7 @@
  <img width=200px height=200px src="https://i.imgur.com/6wj0hh6.jpg" alt="Project logo"></a>
 </p>
 
-<h3 align="center">Project Title</h3>
+<h3 align="center">Yakitabu Backend</h3>
 
 <div align="center">
 
@@ -16,13 +16,14 @@
 
 ---
 
-<p align="center"> Few lines describing your project.
+<p align="center"> 
     <br> 
 </p>
 
 ## 📝 Table of Contents
 
 - [About](#about)
+- [Tech](#tech)
 - [Getting Started](#getting_started)
 - [Deployment](#deployment)
 - [Usage](#usage)
@@ -34,7 +35,12 @@
 
 ## 🧐 About <a name = "about"></a>
 
-Write about 1-2 paragraphs describing the purpose of your project.
+yakitabu-backend is the backend of <b>Yakitabu</b>, a Peer to Peer Book Loan App.
+
+
+## Tech <a name = "tech"></a>
+yakitabu-backend is written in [Python 3](https://www.python.org/) and [Flask 2.0.1](https://flask.palletsprojects.com/en/2.0.x/).
+
 
 ## 🏁 Getting Started <a name = "getting_started"></a>
 
@@ -96,19 +102,42 @@ Add additional notes about how to deploy this on a live system.
 
 ## ⛏️ Built Using <a name = "built_using"></a>
 
-- [MongoDB](https://www.mongodb.com/) - Database
-- [Express](https://expressjs.com/) - Server Framework
-- [VueJs](https://vuejs.org/) - Web Framework
-- [NodeJs](https://nodejs.org/en/) - Server Environment
+- [Python](https://www.python.org/) - Server Environment
+- [Flask](https://flask.palletsprojects.com/en/2.0.x/) - Server Framework
+- [PostgreSQL](https://www.postgresql.org/) - Database
+- [GitHub Actions](https://github.com/features/actions) - CI/CD
+- [Heroku](https://www.heroku.com/) - Deployment
+
 
 ## ✍️ Authors <a name = "authors"></a>
 
-- [@kylelobo](https://github.com/kylelobo) - Idea & Initial work
+- [Delphine](https://github.com/kylelobo) 
+- [Tosin](https://github.com/tosintubi) 
+- [Seunfunmi](https://github.com/seun-beta) 
+- [Osahon](https://github.com/ausiat1)
+- [Brenda](https://github.com/Brenii)
 
-See also the list of [contributors](https://github.com/kylelobo/The-Documentation-Compendium/contributors) who participated in this project.
+## 🤝 Collaboration <a name = "collaboration"></a>
+
+- You need to have PostgresQL installed and set up on your machine.
+
+- Clone the repository from the `staging` branch and please read the [contributing guide](/CONTRIBUTING.md).
+
+- You may also need to have [Heroku](https://devcenter.heroku.com/articles/heroku-cli).
+
+- Run the `Heroku` login commands in your terminal after installation
+  ```sh
+  heroku login
+  ```
+
+Contact [Kosy](https://github.com/kosyfrances), [Tosin](https://github.com/tosintubi) for more details.
+
+
+## 📝 License <a name = "license"></a>
+
+This project is licensed under the MIT License - see the [LICENSE](/LICENSE) file for more details.
+
 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
-- Hat tip to anyone whose code was used
-- Inspiration
-- References
+Special thanks to [Kosy](https://github.com/kosyfrances) for guiding us through the entire app creation process, reviewing our code and unblocking us when we are stuck with an issue, and most especially, for taking the time out of their busy lives to provide free mentorship to us
