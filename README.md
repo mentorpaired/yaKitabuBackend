@@ -1,5 +1,6 @@
-# Follow these commands:
+# Follow these commands
 
+```
 Py -3 -m venv venv
 
 venv\Scripts\activate
@@ -13,3 +14,4 @@ set FLASK_APP=app.py
 set FLASK_ENV=development
 
 flask run
+```
