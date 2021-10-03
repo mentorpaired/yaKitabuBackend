@@ -31,6 +31,24 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        
+    - name: Build Notifications
+      if: always()
+      uses: act10ns/slack@v1.2.2
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      with:
+        channel: '#yakitabu-backend-build'
+        status: ${{ job.status }}
+        success_text: "${env.GITHUB_WORKFLOW} (${env.GITHUB_RUN_NUMBER}) build completed successfully"
+        failure_text: "${env.GITHUB_WORKFLOW} (${env.GITHUB_RUN_NUMBER}) build failed"
+        cancelled_text: "${env.GITHUB_WORKFLOW} (${env.GITHUB_RUN_NUMBER}) build was cancelled"
+        fields: |
+          [{ "title": "Repository", "value": "${env.GITHUB_REPOSITORY}", "short": true },
+          { "title": "Branch", "value": "${env.GITHUB_REF}", "short": true }]
+
 #     - name: Test with pytest
 #       run: |
 #         pytest
+
+
