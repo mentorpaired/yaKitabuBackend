@@ -1,15 +1,16 @@
 <p align="center">
   <a href="" rel="noopener">
- <img width=200px height=200px src="https://i.imgur.com/6wj0hh6.jpg" alt="Project logo"></a>
+ <img width=200px height=200px src="https://i.imgur.com/GaiJno0.png" alt="Project logo"></a>
 </p>
+
 
 <h3 align="center">Yakitabu Backend</h3>
 
 <div align="center">
 
 [![Status](https://img.shields.io/badge/status-active-success.svg)]()
-[![GitHub Issues](https://img.shields.io/github/issues/kylelobo/The-Documentation-Compendium.svg)](https://github.com/kylelobo/The-Documentation-Compendium/issues)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kylelobo/The-Documentation-Compendium.svg)](https://github.com/kylelobo/The-Documentation-Compendium/pulls)
+![GitHub issues](https://img.shields.io/github/issues/mentorpaired/yakitabu-backend)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/mentorpaired/yakitabu-backend?color=light%20green)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
 
 </div>
@@ -108,7 +109,7 @@ Please install and set up the following packages first. Upgrade if you find the 
 
 - [PostgreSQL](https://www.postgresql.org/download/windows/) (Ensure the server is running).
 
-- It is advisable to install Django in a virtual environment. The README uses [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/install.html#basic-installation) to create this environment. You could use any virtualenv package of your choice but for Windows, install this wrapper with:
+- It is advisable to install Flask in a virtual environment. The README uses [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/install.html#basic-installation) to create this environment. You could use any virtualenv package of your choice but for Windows, install this wrapper with:
 
   ```sh
   pip install virtualenvwrapper-win
@@ -124,6 +125,10 @@ Please install and set up the following packages first. Upgrade if you find the 
 
   ```sh
   <envname>\Scripts\activate
+  ```
+  or use this command
+  ```sh 
+  & C:/Users/<username>/Envs/<envname>/Scripts/Activate.ps1
   ```
 
 - Install requirements in the virtual environment created:
@@ -144,18 +149,17 @@ Please install and set up the following packages first. Upgrade if you find the 
   deactivate
   ```
 
-- Create a database with PostgresQL, if you installed it earlier. If not, installation instructions can be found [here](https://www.postgresql.org/download/windows/). Make sure to note database name, database username and password.
+- Create a database with PostgreSQL, if you installed it earlier. If not, installation instructions can be found [here](https://www.postgresql.org/download/windows/). Make sure to note database name, database username and password.
 
 
 
 
 ## 🔧 Running the tests <a name = "tests"></a>
 
-Explain how to run the automated tests for this system.
+<b>N/B</b>: This is a ToDo
 
 ### Break down into end to end tests
-
-Explain what these tests test and why
+<b>N/B</b>: This is a ToDo
 
 ```
 Give an example
@@ -163,7 +167,7 @@ Give an example
 
 ### And coding style tests
 
-Explain what these tests test and why
+<b>N/B</b>: This is a ToDo
 
 ```
 Give an example
@@ -171,10 +175,13 @@ Give an example
 
 ## 🎈 Usage <a name="usage"></a>
 
+
+<b>N/B</b>: This is a ToDo  
 Add notes about how to use the system.
 
 ## 🚀 Deployment <a name = "deployment"></a>
 
+<b>N/B</b>: This is a ToDo  
 Add additional notes about how to deploy this on a live system.
 
 
@@ -184,7 +191,7 @@ Add additional notes about how to deploy this on a live system.
   - (https://www.python.org/downloads/)
   - (https://realpython.com/installing-python/)
   - (https://virtualenvwrapper.readthedocs.io/en/latest/install.html)
-  - (https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/development_environment)
+  - (https://realpython.com/learning-paths/flask-by-example/)
 
 
 
@@ -218,7 +225,7 @@ Add additional notes about how to deploy this on a live system.
   heroku login
   ```
 
-Contact [Kosy](https://github.com/kosyfrances), [Tosin](https://github.com/tosintubi) for more details.
+Contact [Seunfunmi](https://github.com/seun-beta), [Tosin](https://github.com/tosintubi) for more details.
 
 
 ## 📝 License <a name = "license"></a>
@@ -228,4 +235,4 @@ This project is licensed under the MIT License - see the [LICENSE](/LICENSE) fil
 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
-Special thanks to [Kosy](https://github.com/kosyfrances) for guiding us through the entire app creation process, reviewing our code and unblocking us when we are stuck with an issue, and most especially, for taking the time out of their busy lives to provide free mentorship to us
+Special thanks to [Kosy](https://github.com/kosyfrances) and [Tunde](https://github.com/toystars) for guiding us through the entire app creation process, reviewing our code and unblocking us when we are stuck with an issue, and most especially, for taking the time out of their busy lives to provide free mentorship to us.
