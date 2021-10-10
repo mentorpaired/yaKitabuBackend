@@ -77,7 +77,7 @@ source <your_preferred_envname>/bin/activate
 ```
 When the virtual environment is activated (you can see its name in brackets at the beginning of your prompt), you can install modules via pip install.
 ```sh
-(project_venv) $ python -m pip install requests
+<your_preferred_envname> python -m pip install requests
 ```
 
 That is all, you have successfully created your own virtual environment. Now you can run Python (see above) and start working on your project.
@@ -95,12 +95,13 @@ pip install -r requirements.txt
 
 - Install [PostgreSQL](https://www.postgresql.org/).
 
-- Create a database with PostgresQL, the installation instructions for Ubuntu can be found [here](https://www.postgresql.org/download/linux/ubuntu/). Make sure to note Database name, Database Username and Password and also ensure that the server is running
+- Create a database with PostgresQL, the installation instructions for Fedora can be found [here](https://www.postgresql.org/download/linux/redhat/). Make sure to note Database name, Database Username and Password and also ensure that the server is running
 
 
 
 
 - Run server to ensure everything is working properly.
+- On The Terminal,
 
 ```sh
 flask run
