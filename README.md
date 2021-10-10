@@ -1,6 +1,6 @@
 <p align="center">
   <a href="" rel="noopener">
- <img width=200px height=200px src="https://i.imgur.com/GaiJno0.png" alt="Project logo"></a>
+  <img width=200px height=200px src="https://i.imgur.com/GaiJno0.png" alt="Project logo"></a>
 </p>
 
 
@@ -47,32 +47,44 @@ yakitabu-backend is written in [Python 3](https://www.python.org/) and [Flask 2.
 ## ⚙️ Installation  <a name = "installation"></a>
 
 
-### Ubuntu 18.04 Users
+### Fedora 34(Workstation)
+
+Fedora contains many popular packages for Python. Usually, they are named with a python3- prefix, such as python3-requests.
+
+These are useful for scripting and exploring Python and for Fedora-specific applications. For software development or reproducible data analysis, it is better to use virtual environments.
 
 Please install these packages and set up your environment in the order listed below. Run an upgrade or update if you find that the package is already installed:
 
 - Python 3. Run the 'python3 -V' command to see the version you have installed.
 
-- Create a virtual environment in order to install packages. The README uses [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/install.html#basic-installation) to create this environment. You could use any virtualenv package of your choice or install this wrapper with:
+- Using VS Code as our text editor:  right click on the folder explorer and open a terminal
 
+
+Using virtual environments
+When you work on a project, it is good to keep it inside a virtual environment. It will keep the dependencies you need in one place and you do not have to worry about different projects which need different versions of the same module. It also makes it easy to collaborate with people who don’t use Fedora yet.
+
+- create a virtual environment 
 ```sh
-pip install virtualenvwrapper
+<your_preferred_envname>
+``` 
+which will contain Python and pip. You can use pip to install a project’s dependencies.
+```sh
+python -m venv <your_preferred_envname>
+```
+If you want to work in the virtual environment, you have to activate it.
+```sh
+source <your_preferred_envname>/bin/activate
+```
+When the virtual environment is activated (you can see its name in brackets at the beginning of your prompt), you can install modules via pip install.
+```sh
+(project_venv) $ python -m pip install requests
 ```
 
-- Add these lines at the end of your shell startup script (`.bashrc`, `.zshrc`, etc)
+That is all, you have successfully created your own virtual environment. Now you can run Python (see above) and start working on your project.
 
+When you finish your work, you can deactivate the virtual environment.
 ```sh
-export WORKON_HOME=$HOME/.virtualenvs
-export PROJECT_HOME=$HOME/Devel
-source /usr/local/bin/virtualenvwrapper.sh
-```
-
-- After editing, reload the startup file (e.g., run `source ~/.bashrc`).
-
-- Create a new virtual environment:
-
-```sh
-mkvirtualenv <your_preferred_envname>
+ <your_preferred_envname>  deactivate
 ```
 
 - Install requirements in the virtual environment created:
