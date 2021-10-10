@@ -26,9 +26,6 @@
 - [About](#about)
 - [Tech](#tech)
 - [Installation](#installation)
-- [Running the Tests](#tests)
-- [Usage](#usage)
-- [Deployment](#deployment)
 - [Built Using](#built_using)
 - [Authors](#authors)
 - [Collaboration](#collaboration)
@@ -163,39 +160,6 @@ Please install and set up the following packages first. Upgrade if you find the 
   ```
 
 - Create a database with PostgreSQL, if you installed it earlier. If not, installation instructions can be found [here](https://www.postgresql.org/download/windows/). Make sure to note database name, database username and password.
-
-
-
-
-## 🔧 Running the tests <a name = "tests"></a>
-
-<b>N/B</b>: This is a ToDo
-
-### Break down into end to end tests
-<b>N/B</b>: This is a ToDo
-
-```
-Give an example
-```
-
-### And coding style tests
-
-<b>N/B</b>: This is a ToDo
-
-```
-Give an example
-```
-
-## 🎈 Usage <a name="usage"></a>
-
-
-<b>N/B</b>: This is a ToDo  
-Add notes about how to use the system.
-
-## 🚀 Deployment <a name = "deployment"></a>
-
-<b>N/B</b>: This is a ToDo  
-Add additional notes about how to deploy this on a live system.
 
 
 ### Python installation instructions for Windows, macOS and other Linux distro Users
