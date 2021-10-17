@@ -1,6 +1,6 @@
 import os 
 
-class Config(object):
+class Config:
     DEBUG = False
     DEVELOPEMENT = False
     CSRF_ENABLED = True
