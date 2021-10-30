@@ -47,9 +47,9 @@ def google_authorize():
     Google authorize route.
     Returns: openid, email, profile and login token
     """
-    google_client = oauth.create_client('google')
-    token = google_client.authorize_access_token()
-    response = google_client.get('userinfo').json()
+    google = oauth.create_client('google')
+    token = google.authorize_access_token()
+    response = google.get('userinfo').json()
     response['token'] = token
     return response
 
