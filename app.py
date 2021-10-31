@@ -5,8 +5,12 @@ from authlib.integrations.flask_client import OAuth
 
 app = Flask(__name__)
 app.config.from_object('config')
-# app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI']
-# db = SQLAlchemy(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI']
+
+app.config.from_object(os.environ['APP_SETTINGS'])
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
 oauth = OAuth(app)
 
 google = oauth.register(
