@@ -2,10 +2,10 @@ import os
 
 class Config:
     DEBUG = False
-    DEVELOPEMENT = False
+    DEVELOPMENT = False
     CSRF_ENABLED = True
     SECRET_KEY = os.environ["SECRET_KEY"]
-    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URI']
+    SQLALCHEMY_DATABASE_URI = os.environ['SQLALCHEMY_DATABASE_URI']
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
@@ -15,9 +15,9 @@ class ProductionConfig(Config):
 
 class StagingConfig(Config):
     DEBUG = True
-    DEVELOPEMENT = True
+    DEVELOPMENT = True
 
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    DEVELOPEMENT = True
+    DEVELOPMENT = True

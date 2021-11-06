@@ -82,5 +82,5 @@ ENV/
 # mypy
 .mypy_cache/
 
-# Virtual Environment command
+# Virtual Environment
 virtualenv/
