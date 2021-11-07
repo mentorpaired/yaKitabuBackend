@@ -1,6 +1,7 @@
 import os
 from flask import Flask
 from src.models import db
+from src.user import user
 
 
 def create_app(test_config=None):
@@ -18,4 +19,7 @@ def create_app(test_config=None):
     db.app = app
     db.init_app(app)
 
+    # Register blueprints
+
+    app.register_blueprint(user)
     return app
