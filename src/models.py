@@ -20,7 +20,7 @@ class UserLogin(db.Model):
     google_login = db.Column(db.Boolean, default=False)
     last_login = db.Column(db.DateTime, default=datetime.now())
     is_active = db.Column(db.Boolean, default=True, nullable=False)
-    user_profile_id = db.Column(UUID, db.ForeignKey("user_profile.id"))
+    user_profile_id = db.Column(UUID(as_uuid=True), db.ForeignKey("user_profile.id"))
     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
 
@@ -44,7 +44,6 @@ class UserProfile(db.Model):
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
 
     # Relationships
-
     user_login = db.relationship("UserLogin", backref="user_profile")
 
     borrowed = db.relationship("Borrowing", backref="user_profile")

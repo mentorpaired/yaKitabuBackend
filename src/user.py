@@ -53,9 +53,11 @@ def login():
 
         # Check if user already exists. If no, create their profile
         user_exists = UserProfile.query.filter_by(email=email).first()
+
         if user_exists is None:
             uid = uuid.uuid4()
 
+            # User Profile
             new_user = UserProfile(
                 id=uid,
                 first_name=first_name,
@@ -64,30 +66,35 @@ def login():
                 username=email,
                 picture_url=image_url
             )
-            #
-            # user_login = UserLogin(
-            #
-            # )
+
+            # user Login
+            user_login = UserLogin(
+                id=uuid.uuid4(),
+                google_login=True,
+                is_active=True,
+                user_profile_id=new_user.id
+            )
+
             db.session.add(new_user)
+            db.session.add(user_login)
             db.session.commit()
 
+            # TODO: Replace with JSON Object
+            #
+            # Response: {
+            # 	first name: string
+            # 	Last name: string
+            # 	Id: string (this is the UUID that will be used as URL identifier)
+            # 	Available points: int
+            # 	Created date: month year
+            # 	Currently reading: {
+            # 		Title: string
+            # 		Author: string
+            # 		Category: string
+            #   }
+            # }
             return 'user_created'
 
     else:
         # TODO: Replace with Exception Message
-
         return jsonify({'error': "'id_token'  or 'image_url' is missing from request"}), HTTP_400_BAD_REQUEST
-
-#
-# Response: {
-# 	first name: string
-# 	Last name: string
-# 	Id: string (this is the UUID that will be used as URL identifier)
-# 	Available points: int
-# 	Created date: month year
-# 	Currently reading: {
-# 		Title: string
-# 		Author: string
-# 		Category: string
-# }
-# }
