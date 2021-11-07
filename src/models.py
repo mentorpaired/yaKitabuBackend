@@ -5,14 +5,6 @@ from sqlalchemy.dialects.postgresql import UUID
 db = SQLAlchemy()
 
 
-# class BaseModel(db.Model):
-#     __abstract__ = True
-#
-#     id = db.Column(UUID(as_uuid=True), primary_key=True)
-#     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
-#     update_at = db.Column(db.DateTime, onupdate=datetime.now())
-
-
 class UserLogin(db.Model):
     __tablename__ = 'user_login'
     id = db.Column(UUID(as_uuid=True), primary_key=True)
@@ -39,7 +31,6 @@ class UserProfile(db.Model):
     picture_url = db.Column(db.String(300))
     available_points = db.Column(db.Integer, default=20)
     used_points = db.Column(db.Integer, default=0)
-
     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
 
@@ -67,7 +58,6 @@ class Book(db.Model):
     year_of_publication = db.Column(db.Date, nullable=False)
     category = db.Column(db.String(300), nullable=False)
     author_id = db.Column(UUID, db.ForeignKey("author.id"))
-
     owner_id = db.Column(UUID, db.ForeignKey("user_profile.id"), nullable=False)
     # borrowed = db.Column(UUID, db.ForeignKey("user_profile.id"), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
