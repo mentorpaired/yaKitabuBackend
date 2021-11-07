@@ -5,14 +5,6 @@ from sqlalchemy.dialects.postgresql import UUID
 db = SQLAlchemy()
 
 
-# class BaseModel(db.Model):
-#     __abstract__ = True
-# 
-#     id = db.Column(UUID(as_uuid=True), primary_key=True)
-#     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
-#     update_at = db.Column(db.DateTime, onupdate=datetime.now())
-
-
 class UserLogin(db.Model):
     __tablename__ = 'user_login'
     id = db.Column(UUID(as_uuid=True), primary_key=True)
@@ -93,19 +85,6 @@ class Borrowing(db.Model):
     points_used = db.Column(db.Integer, default=0)
     # lend_id = db.Column(UUID, db.Foreignkey("lending.id"), nullable=False)
     book_id = db.Column(UUID, db.ForeignKey("book.id"), nullable=False)
-
     borrowed_id = db.Column(UUID, db.ForeignKey("user_profile.id"), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
-
-# class Lending(db.Model):
-#     __tablename__ = 'lending'
-#
-#     id = db.Column(UUID(as_uuid=True), primary_key=True)
-#     book_id = db.Column(db.Integer, db.Foreignkey("book.id"), nullable=False)
-#     points = db.Column(db.Integer, default=0)
-#     is_available = db.Column(db.Boolean, default=True, nullable=False)
-#     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
-#     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
-#
-#     borrowing = db.relationship("Borrowing", backref="lending", lazy=False)

@@ -108,8 +108,8 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.yakitabu-backend" />
       <item itemvalue="Python.app" />
+      <item itemvalue="Python.yakitabu-backend" />
     </list>
     <recent_temporary>
       <list>
