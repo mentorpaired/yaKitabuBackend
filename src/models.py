@@ -66,9 +66,9 @@ class Book(db.Model):
     language = db.Column(db.String(30), nullable=False)
     year_of_publication = db.Column(db.Date, nullable=False)
     category = db.Column(db.String(300), nullable=False)
-    author_id = db.Column(UUID, db.ForeignKey("author.id"))
+    author_id = db.Column(UUID(as_uuid=True), db.ForeignKey("author.id"))
 
-    owner_id = db.Column(UUID, db.ForeignKey("user_profile.id"), nullable=False)
+    owner_id = db.Column(UUID(as_uuid=True), db.ForeignKey("user_profile.id"), nullable=False)
     # borrowed = db.Column(UUID, db.ForeignKey("user_profile.id"), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
@@ -91,9 +91,9 @@ class Borrowing(db.Model):
     returned_date = db.Column(db.DateTime, default=datetime.now())
     points_used = db.Column(db.Integer, default=0)
     # lend_id = db.Column(UUID, db.Foreignkey("lending.id"), nullable=False)
-    book_id = db.Column(UUID, db.ForeignKey("book.id"), nullable=False)
+    book_id = db.Column(UUID(as_uuid=True), db.ForeignKey("book.id"), nullable=False)
 
-    borrower = db.Column(UUID, db.ForeignKey("user_profile.id"), nullable=False)
+    borrower = db.Column(UUID(as_uuid=True), db.ForeignKey("user_profile.id"), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
 

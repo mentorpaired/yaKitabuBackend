@@ -1,11 +1,11 @@
 from flask import Blueprint, jsonify, request
 from google.auth import jwt
 from src.constants.http_status_codes import *
-from src.models import UserLogin, UserProfile, db
+from src.models import UserLogin, UserProfile, db, Borrowing
 import logging
 import json
 import uuid
-
+from datetime import datetime
 
 user = Blueprint('user', __name__, url_prefix='/api/v1/user')
 
@@ -48,9 +48,6 @@ def login():
         last_name = google_response['family_name']
         picture_url = request.json['image_url']
 
-        # # Currently setting username==email for google signups
-        # email = google_response['email']
-
         # Check if user already exists. If no, create their profile
         user_exists = UserProfile.query.filter_by(email=email).first()
 
@@ -63,6 +60,7 @@ def login():
                 first_name=first_name,
                 last_name=last_name,
                 email=email,
+                # Currently setting username==email for google signups
                 username=email,
                 picture_url=image_url
             )
@@ -74,29 +72,45 @@ def login():
                 is_active=True,
                 user_profile_id=new_user.id
             )
-
             db.session.add(new_user)
             db.session.add(user_login)
             db.session.commit()
 
-            # TODO: Replace with JSON Object
-            #
-            # Response: {
-            # 	first name: string
-            # 	Last name: string
-            # 	Id: string (this is the UUID that will be used as URL identifier)
-            # 	Available points: int
-            # 	Created date: month year
-            # 	Currently reading: {
-            # 		Title: string
-            # 		Author: string
-            # 		Category: string
-            #   }
-            # }
-            return 'user_created'
+            user_profile = UserProfile.query.filter_by(id=uid).first()
+            last_borrowed = Borrowing.query.filter_by(borrower=uid).order_by(Borrowing.created_at.desc())
+
+            return jsonify({
+                'id': user_profile.id,
+                'first_name': user_profile.first_name,
+                'last_name': user_profile.last_name,
+                'available_points': user_profile.available_points,
+                'created_date': user_profile.created_at,
+                'currently_reading': user_profile.book
+                # TODO
+                # 'currently_reading': jsonify({
+                #     'title': last_borrowed.book.name,
+                #     'author': last_borrowed.book.author.first_name + last_borrowed.book.author.last_name})
+            }), HTTP_200_OK
         else:
-            # TODO: User exists: Return their information.
-            return 'user_exists'
+            # Change filter criteria to email, since user already exists.
+            user_profile = UserProfile.query.filter_by(email=email).first()
+            # last_borrowed = Borrowing.query.filter_by(borrower=user_profile.id).order_by(Borrowing.created_at.desc(
+            # )).\ first()
+            last_borrowed = Borrowing.query.filter_by(borrower=user_profile.id).first()
+            return jsonify({
+                'id': user_profile.id,
+                'first_name': user_profile.first_name,
+                'last_name': user_profile.last_name,
+                'available_points': user_profile.available_points,
+                'created_date': user_profile.created_at,
+                'currently_reading': user_profile.book,
+                # TODO
+                # 'currently_reading': jsonify({
+                #     'title': last_borrowed.book.name,
+                #     'author': last_borrowed.book.author.first_name + last_borrowed.book.author.last_name})
+            }), HTTP_200_OK
     else:
         # TODO: Replace with Exception Message
-        return jsonify({'error': "'id_token'  or 'image_url' is missing from request"}), HTTP_400_BAD_REQUEST
+        return jsonify({
+            'error': "'id_token'  or 'image_url' is missing from request"
+        }), HTTP_400_BAD_REQUEST
