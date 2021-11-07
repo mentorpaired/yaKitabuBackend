@@ -94,7 +94,9 @@ def login():
             #   }
             # }
             return 'user_created'
-
+        else:
+            # TODO: User exists: Return their information.
+            return 'user_exists'
     else:
         # TODO: Replace with Exception Message
         return jsonify({'error': "'id_token'  or 'image_url' is missing from request"}), HTTP_400_BAD_REQUEST
