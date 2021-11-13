@@ -84,3 +84,8 @@ ENV/
 
 # Virtual Environment
 virtualenv/
+
+
+# Intellij Idea
+.idea
+.idea/

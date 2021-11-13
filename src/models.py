@@ -64,7 +64,7 @@ class Book(db.Model):
     name = db.Column(db.String(300), nullable=False)
     isbn = db.Column(db.String(20))
     language = db.Column(db.String(30), nullable=False)
-    year_of_publication = db.Column(db.Date, nullable=False)
+    year_of_publication = db.Column(db.Integer, nullable=False)
     category = db.Column(db.String(300), nullable=False)
     author_id = db.Column(UUID(as_uuid=True), db.ForeignKey("author.id"))
 
