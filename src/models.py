@@ -35,7 +35,6 @@ class UserProfile(db.Model):
     first_name = db.Column(db.String(200), nullable=False)
     last_name = db.Column(db.String(200), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    username = db.Column(db.String(200), nullable=False, unique=True)
     picture_url = db.Column(db.String(300))
     available_points = db.Column(db.Integer, default=20)
     used_points = db.Column(db.Integer, default=0)
@@ -67,7 +66,6 @@ class Book(db.Model):
     year_of_publication = db.Column(db.Integer, nullable=False)
     category = db.Column(db.String(300), nullable=False)
     author_id = db.Column(UUID(as_uuid=True), db.ForeignKey("author.id"))
-
     owner_id = db.Column(UUID(as_uuid=True), db.ForeignKey("user_profile.id"), nullable=False)
     # borrowed = db.Column(UUID, db.ForeignKey("user_profile.id"), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
@@ -87,8 +85,8 @@ class Borrowing(db.Model):
 
     id = db.Column(UUID(as_uuid=True), primary_key=True)
     borrowed_date = db.Column(db.DateTime, default=datetime.now())
-    deadline = db.Column(db.DateTime, default=datetime.now())
-    returned_date = db.Column(db.DateTime, default=datetime.now())
+    deadline = db.Column(db.DateTime, nullable=False)
+    returned_date = db.Column(db.DateTime)
     points_used = db.Column(db.Integer, default=0)
     # lend_id = db.Column(UUID, db.Foreignkey("lending.id"), nullable=False)
     book_id = db.Column(UUID(as_uuid=True), db.ForeignKey("book.id"), nullable=False)

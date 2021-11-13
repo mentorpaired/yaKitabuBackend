@@ -37,16 +37,15 @@ def decode_token(token_object):
 @user.post('/login/google')
 def login():
     # Checks on request.
-    if 'id_token' and 'image_url' in request.json:
+    if 'id_token' in request.json:
         token = request.json['id_token']
-        image_url = request.json['image_url']
 
         google_response = decode_token(token)
 
         email = google_response['email']
         first_name = google_response['given_name']
         last_name = google_response['family_name']
-        picture_url = request.json['image_url']
+        picture_url = request.json['picture']
 
         # Check if user already exists. If no, create their profile
         user_exists = UserProfile.query.filter_by(email=email).first()
@@ -60,9 +59,7 @@ def login():
                 first_name=first_name,
                 last_name=last_name,
                 email=email,
-                # Currently setting username==email for google signups
-                username=email,
-                picture_url=image_url
+                picture_url=picture_url
             )
 
             # user Login
@@ -77,7 +74,7 @@ def login():
             db.session.commit()
 
             user_profile = UserProfile.query.filter_by(id=uid).first()
-            last_borrowed = Borrowing.query.filter_by(borrower=uid).order_by(Borrowing.created_at.desc())
+            last_borrowed = Borrowing.query.filter_by(borrower=uid).order_by(Borrowing.created_at.desc()).first()
 
             return jsonify({
                 'id': user_profile.id,
@@ -85,32 +82,26 @@ def login():
                 'last_name': user_profile.last_name,
                 'available_points': user_profile.available_points,
                 'created_date': user_profile.created_at,
-                'currently_reading': user_profile.book
-                # TODO
-                # 'currently_reading': jsonify({
-                #     'title': last_borrowed.book.name,
-                #     'author': last_borrowed.book.author.first_name + last_borrowed.book.author.last_name})
+                'currently_reading': {
+                    'title': last_borrowed.book.name,
+                    'author': last_borrowed.book.author.first_name + " " + last_borrowed.book.author.last_name}
             }), HTTP_200_OK
         else:
-            # Change filter criteria to email, since user already exists.
             user_profile = UserProfile.query.filter_by(email=email).first()
-            # last_borrowed = Borrowing.query.filter_by(borrower=user_profile.id).order_by(Borrowing.created_at.desc(
-            # )).\ first()
-            last_borrowed = Borrowing.query.filter_by(borrower=user_profile.id).first()
+            last_borrowed = Borrowing.query.filter_by(borrower=user_profile.id).order_by(Borrowing.created_at.desc())\
+                .first()
             return jsonify({
                 'id': user_profile.id,
                 'first_name': user_profile.first_name,
                 'last_name': user_profile.last_name,
                 'available_points': user_profile.available_points,
                 'created_date': user_profile.created_at,
-                'currently_reading': user_profile.book,
-                # TODO
-                # 'currently_reading': jsonify({
-                #     'title': last_borrowed.book.name,
-                #     'author': last_borrowed.book.author.first_name + last_borrowed.book.author.last_name})
+                'currently_reading': {
+                    'title': last_borrowed.book.name,
+                    'author': last_borrowed.book.author.first_name + " " + last_borrowed.book.author.last_name}
             }), HTTP_200_OK
     else:
         # TODO: Replace with Exception Message
         return jsonify({
-            'error': "'id_token'  or 'image_url' is missing from request"
+            'error': "'id_token' is missing from request"
         }), HTTP_400_BAD_REQUEST
