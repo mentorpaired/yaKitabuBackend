@@ -45,7 +45,7 @@ def login():
         email = google_response['email']
         first_name = google_response['given_name']
         last_name = google_response['family_name']
-        picture_url = request.json['picture']
+        picture_url = google_response['picture']
 
         # Check if user already exists. If no, create their profile
         user_exists = UserProfile.query.filter_by(email=email).first()
@@ -74,34 +74,51 @@ def login():
             db.session.commit()
 
             user_profile = UserProfile.query.filter_by(id=uid).first()
-            last_borrowed = Borrowing.query.filter_by(borrower=uid).order_by(Borrowing.created_at.desc()).first()
+            return jsonify(get_user_info(user_profile.id)), HTTP_200_OK
 
-            return jsonify({
-                'id': user_profile.id,
-                'first_name': user_profile.first_name,
-                'last_name': user_profile.last_name,
-                'available_points': user_profile.available_points,
-                'created_date': user_profile.created_at,
-                'currently_reading': {
-                    'title': last_borrowed.book.name,
-                    'author': last_borrowed.book.author.first_name + " " + last_borrowed.book.author.last_name}
-            }), HTTP_200_OK
         else:
             user_profile = UserProfile.query.filter_by(email=email).first()
-            last_borrowed = Borrowing.query.filter_by(borrower=user_profile.id).order_by(Borrowing.created_at.desc())\
-                .first()
-            return jsonify({
-                'id': user_profile.id,
-                'first_name': user_profile.first_name,
-                'last_name': user_profile.last_name,
-                'available_points': user_profile.available_points,
-                'created_date': user_profile.created_at,
-                'currently_reading': {
-                    'title': last_borrowed.book.name,
-                    'author': last_borrowed.book.author.first_name + " " + last_borrowed.book.author.last_name}
-            }), HTTP_200_OK
+            return jsonify(get_user_info(user_profile.id)), HTTP_200_OK
     else:
         # TODO: Replace with Exception Message
         return jsonify({
             'error': "'id_token' is missing from request"
         }), HTTP_400_BAD_REQUEST
+
+
+def get_user_info(uid):
+    """
+    Returns a user's profile information using the user_id
+    """
+    user_profile = UserProfile.query.filter_by(id=uid).first()
+    user_info = {
+        'id': user_profile.id,
+        'first_name': user_profile.first_name,
+        'last_name': user_profile.last_name,
+        'email': user_profile.email,
+        'available_points': user_profile.available_points,
+        'created_date': user_profile.created_at,
+        'currently_reading': get_last_unreturned_book(user_profile.id)
+    }
+    return user_info
+
+
+def get_last_unreturned_book(user_id):
+    """
+    Returns the last book a user borrowed.
+    """
+    last_borrowed = Borrowing.query.filter_by(borrower=user_id, returned_date=None).order_by(Borrowing.
+                                                                                             created_at.desc()).first()
+    # User has borrowed at least one book
+    if last_borrowed:
+        borrowing_info = {
+            'title': last_borrowed.book.name,
+            'author': last_borrowed.book.author.first_name + " " + last_borrowed.book.author.last_name
+        }
+    else:
+        # User has not borrowed any book
+        borrowing_info = {
+            'title': None,
+            'author': None
+        }
+    return borrowing_info
