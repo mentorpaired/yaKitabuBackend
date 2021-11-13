@@ -5,14 +5,6 @@ from sqlalchemy.dialects.postgresql import UUID
 db = SQLAlchemy()
 
 
-# class BaseModel(db.Model):
-#     __abstract__ = True
-#
-#     id = db.Column(UUID(as_uuid=True), primary_key=True)
-#     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
-#     update_at = db.Column(db.DateTime, onupdate=datetime.now())
-
-
 class UserLogin(db.Model):
     __tablename__ = 'user_login'
     id = db.Column(UUID(as_uuid=True), primary_key=True)
@@ -38,13 +30,11 @@ class UserProfile(db.Model):
     picture_url = db.Column(db.String(300))
     available_points = db.Column(db.Integer, default=20)
     used_points = db.Column(db.Integer, default=0)
-
     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
 
     # Relationships
     user_login = db.relationship("UserLogin", backref="user_profile")
-
     borrowed = db.relationship("Borrowing", backref="user_profile")
     book = db.relationship("Book", backref="user_profile", lazy=True)
     # lend = db.relationship("Borrowing", backref="user_profile", lazy=True)
@@ -67,7 +57,7 @@ class Book(db.Model):
     category = db.Column(db.String(300), nullable=False)
     author_id = db.Column(UUID(as_uuid=True), db.ForeignKey("author.id"))
     owner_id = db.Column(UUID(as_uuid=True), db.ForeignKey("user_profile.id"), nullable=False)
-    # borrowed = db.Column(UUID, db.ForeignKey("user_profile.id"), nullable=False)
+    borrowed = db.Column(db.Boolean, default=False, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
     is_available = db.Column(db.Boolean, default=True)
@@ -90,7 +80,6 @@ class Borrowing(db.Model):
     points_used = db.Column(db.Integer, default=0)
     # lend_id = db.Column(UUID, db.Foreignkey("lending.id"), nullable=False)
     book_id = db.Column(UUID(as_uuid=True), db.ForeignKey("book.id"), nullable=False)
-
     borrower = db.Column(UUID(as_uuid=True), db.ForeignKey("user_profile.id"), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
@@ -113,15 +102,3 @@ class Author(db.Model):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
-# class Lending(db.Model):
-#     __tablename__ = 'lending'
-#
-#     id = db.Column(UUID(as_uuid=True), primary_key=True)
-#     book_id = db.Column(db.Integer, db.Foreignkey("book.id"), nullable=False)
-#     points = db.Column(db.Integer, default=0)
-#     is_available = db.Column(db.Boolean, default=True, nullable=False)
-#     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
-#     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
-#
-#     borrowing = db.relationship("Borrowing", backref="lending", lazy=False)

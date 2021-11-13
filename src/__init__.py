@@ -21,6 +21,5 @@ def create_app(test_config=None):
     db.init_app(app)
 
     # Register blueprints
-
     app.register_blueprint(user)
     return app

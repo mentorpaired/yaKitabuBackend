@@ -58,7 +58,6 @@ instance/
 # PyBuilder
 target/
 
-
 # pyenv
 .python-version
 
@@ -89,3 +88,4 @@ virtualenv/
 # Intellij Idea
 .idea
 .idea/
+/.idea
