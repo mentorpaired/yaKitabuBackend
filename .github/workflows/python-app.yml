@@ -50,5 +50,9 @@ jobs:
 #     - name: Test with pytest
 #       run: |
 #         pytest
+        
+    - name: Test using unittest
+      run: |
+        python -m unittest
 
 
