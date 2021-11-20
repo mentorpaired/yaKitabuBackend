@@ -1,16 +1,18 @@
-from flask import Blueprint, jsonify, request
-from google.auth import jwt
-from src.constants.http_status_codes import *
-from src.models import UserLogin, UserProfile, db, Borrowing
 import logging
 import json
 import uuid
 from datetime import datetime
+from google.auth import jwt
+from flask import Blueprint, jsonify, request
+from src.constants.http_status_codes import *
+from src.models import UserLogin, UserProfile, db, Borrowing
+
 
 user = Blueprint('user', __name__, url_prefix='/api/v1/user')
 
 
 def decode_token(token_object):
+     
     """
     Decodes a google token and returns a JSON object with the following details
     {
@@ -36,57 +38,60 @@ def decode_token(token_object):
 
 @user.post('/login/google')
 def login():
+    if request.method != 'POST':
+        return HTTP_405_METHOD_NOT_ALLOWED
+    
     # Checks on request.
-    if 'id_token' in request.json:
-        token = request.json['id_token']
-
-        google_response = decode_token(token)
-
-        email = google_response['email']
-        first_name = google_response['given_name']
-        last_name = google_response['family_name']
-        picture_url = google_response['picture']
-
-        # Check if user already exists. If no, create their profile
-        user_exists = UserProfile.query.filter_by(email=email).first()
-
-        if user_exists is None:
-            uid = uuid.uuid4()
-
-            # User Profile
-            new_user = UserProfile(
-                id=uid,
-                first_name=first_name,
-                last_name=last_name,
-                email=email,
-                picture_url=picture_url
-            )
-
-            # user Login
-            user_login = UserLogin(
-                id=uuid.uuid4(),
-                google_login=True,
-                is_active=True,
-                user_profile_id=new_user.id
-            )
-            db.session.add(new_user)
-            db.session.add(user_login)
-            db.session.commit()
-
-            user_profile = UserProfile.query.filter_by(id=uid).first()
-            return jsonify(get_user_info(user_profile.id)), HTTP_200_OK
-
-        else:
-            user_profile = UserProfile.query.filter_by(email=email).first()
-            return jsonify(get_user_info(user_profile.id)), HTTP_200_OK
-    else:
-        # TODO: Replace with Exception Message
+    if 'id_token' not in request.json:
         return jsonify({
             'error': "'id_token' is missing from request"
         }), HTTP_400_BAD_REQUEST
 
+    token = request.json['id_token']
 
-def get_user_info(uid):
+    google_response = decode_token(token)
+
+    email = google_response['email']
+    first_name = google_response['given_name']
+    last_name = google_response['family_name']
+    picture_url = google_response['picture']
+
+    # Check if user already exists. If no, create their profile
+    user_exists = UserProfile.query.filter_by(email=email).first()
+
+    if user_exists:
+        user_profile = UserProfile.query.filter_by(email=email).first()
+        return jsonify(get_user_info(user_profile.id)), HTTP_200_OK
+
+    # User doesn't exist yet
+    # User Profile
+    new_user = UserProfile(
+        id=uuid.uuid4(),
+        first_name=first_name,
+        last_name=last_name,
+        email=email,
+        picture_url=picture_url
+    )
+
+    # user Login
+    user_login = UserLogin(
+        id=uuid.uuid4(),
+        google_login=True,
+        is_active=True,
+        user_profile_id=new_user.id,
+        last_login=datetime.now()
+    )
+
+    db.session.add(new_user)
+    db.session.add(user_login)
+    db.session.commit()
+
+    user_profile = UserProfile.query.filter_by(id=uid).first()
+    return jsonify(get_user_info(user_profile.id)), HTTP_200_OK
+
+
+def get_user_info(uid):    
+    
     """
     Returns a user's profile information using the user_id
     """
@@ -104,21 +109,25 @@ def get_user_info(uid):
 
 
 def get_last_unreturned_book(user_id):
+    
+    
     """
     Returns the last book a user borrowed.
     """
-    last_borrowed = Borrowing.query.filter_by(borrower=user_id, returned_date=None).order_by(Borrowing.
-                                                                                             created_at.desc()).first()
+    last_borrowed = Borrowing.query.filter_by(
+        borrower=user_id,
+        returned_date=None
+    ).order_by(Borrowing.created_at.desc()).first()
+
     # User has borrowed at least one book
     if last_borrowed:
-        borrowing_info = {
+        return {
             'title': last_borrowed.book.name,
             'author': last_borrowed.book.author.first_name + " " + last_borrowed.book.author.last_name
         }
-    else:
-        # User has not borrowed any book
-        borrowing_info = {
-            'title': None,
-            'author': None
-        }
-    return borrowing_info
+    
+    # User has not borrowed any book
+    return {
+        'title': '',
+        'author': ''
+    }

@@ -2,6 +2,7 @@ import os
 from flask import Flask
 from src.models import db
 from src.user import user
+from flask_migrate import Migrate
 
 
 def create_app(test_config=None):
@@ -19,6 +20,7 @@ def create_app(test_config=None):
     # Initializations
     db.app = app
     db.init_app(app)
+    migrate = Migrate(app,db)
 
     # Register blueprints
     app.register_blueprint(user)

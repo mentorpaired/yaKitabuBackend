@@ -37,8 +37,7 @@ class UserProfile(db.Model):
     user_login = db.relationship("UserLogin", backref="user_profile")
     borrowed = db.relationship("Borrowing", backref="user_profile")
     book = db.relationship("Book", backref="user_profile", lazy=True)
-    # lend = db.relationship("Borrowing", backref="user_profile", lazy=True)
-
+    
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -64,8 +63,7 @@ class Book(db.Model):
     loan_points = db.Column(db.Integer, default=10)
 
     book = db.relationship("Borrowing", backref="book", lazy=True)
-    # lend = db.relationship("Lend", backref="book")
-
+    
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -78,7 +76,6 @@ class Borrowing(db.Model):
     deadline = db.Column(db.DateTime, nullable=False)
     returned_date = db.Column(db.DateTime)
     points_used = db.Column(db.Integer, default=0)
-    # lend_id = db.Column(UUID, db.Foreignkey("lending.id"), nullable=False)
     book_id = db.Column(UUID(as_uuid=True), db.ForeignKey("book.id"), nullable=False)
     borrower = db.Column(UUID(as_uuid=True), db.ForeignKey("user_profile.id"), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
@@ -96,9 +93,7 @@ class Author(db.Model):
     last_name = db.Column(db.String(200))
     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
-
     book = db.relationship("Book", backref="author", lazy=True)
-    # borrowed = db.relationship("Borrowed", backref="author", lazy=False)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
