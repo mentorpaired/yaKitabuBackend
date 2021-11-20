@@ -89,3 +89,6 @@ virtualenv/
 .idea
 .idea/
 /.idea
+
+.vscode/
+.vscode
