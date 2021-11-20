@@ -2,9 +2,10 @@ import logging
 import json
 import uuid
 from datetime import datetime
+import logging
 from google.auth import jwt
 from flask import Blueprint, jsonify, request
-from src.constants.http_status_codes import *
+from src.constants.http_status_codes import HTTP_200_OK,HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 from src.models import UserLogin, UserProfile, db, Borrowing
 
 
@@ -33,6 +34,10 @@ def decode_token(token_object):
         "sub": "113501893650341726537"
     }
     """
+    # try:
+    #     return jwt.decode(token_object, verify=False)
+    # except Exception as ex:
+    #     logging.critical(ex)
     return jwt.decode(token_object, verify=False)
 
 
@@ -48,8 +53,11 @@ def login():
         }), HTTP_400_BAD_REQUEST
 
     token = request.json['id_token']
-
-    google_response = decode_token(token)
+    
+    try:
+        google_response = decode_token(token)
+    except Exception:
+        return {"error":"Invalid Token"}, HTTP_400_BAD_REQUEST
 
     email = google_response['email']
     first_name = google_response['given_name']
@@ -86,7 +94,7 @@ def login():
     db.session.add(user_login)
     db.session.commit()
 
-    user_profile = UserProfile.query.filter_by(id=uid).first()
+    user_profile = UserProfile.query.filter_by(id=new_user.id).first()
     return jsonify(get_user_info(user_profile.id)), HTTP_200_OK
 
 
