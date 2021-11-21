@@ -10,7 +10,6 @@ class Config:
     JSON_SORT_KEYS=False
     
 
-
 class ProductionConfig(Config):
     DEBUG = False
 

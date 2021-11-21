@@ -1,12 +1,14 @@
 from datetime import datetime
+
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import UUID
 
-db = SQLAlchemy()
 
+db = SQLAlchemy()
 
 class UserLogin(db.Model):
     __tablename__ = 'user_login'
+    
     id = db.Column(UUID(as_uuid=True), primary_key=True)
     password_hash = db.Column(db.String(200))
     google_login = db.Column(db.Boolean, default=False)
@@ -29,7 +31,7 @@ class UserProfile(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     picture_url = db.Column(db.String(300))
     available_points = db.Column(db.Integer, default=20)
-    used_points = db.Column(db.Integer, default=0)
+    used_points = db.Column(db.Integer)
     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
 
@@ -89,8 +91,8 @@ class Author(db.Model):
     __tablename__ = 'author'
 
     id = db.Column(UUID(as_uuid=True), primary_key=True)
-    first_name = db.Column(db.String(200))
-    last_name = db.Column(db.String(200))
+    first_name = db.Column(db.String(200), nullable=False)
+    last_name = db.Column(db.String(200), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
     book = db.relationship("Book", backref="author", lazy=True)

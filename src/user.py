@@ -2,9 +2,10 @@ import logging
 import json
 import uuid
 from datetime import datetime
-import logging
+
 from google.auth import jwt
 from flask import Blueprint, jsonify, request
+
 from src.constants.http_status_codes import HTTP_200_OK,HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 from src.models import UserLogin, UserProfile, db, Borrowing
 
@@ -13,7 +14,6 @@ user = Blueprint('user', __name__, url_prefix='/api/v1/user')
 
 
 def decode_token(token_object):
-     
     """
     Decodes a google token and returns a JSON object with the following details
     {
@@ -34,19 +34,14 @@ def decode_token(token_object):
         "sub": "113501893650341726537"
     }
     """
-    # try:
-    #     return jwt.decode(token_object, verify=False)
-    # except Exception as ex:
-    #     logging.critical(ex)
+    # https://google-auth.readthedocs.io/en/latest/reference/google.auth.jwt.html#google.auth.jwt.decode
+    # verify=False will skip signature and claim Verfication. Verification is done by default.
     return jwt.decode(token_object, verify=False)
 
 
 @user.post('/login/google')
 def login():
-    if request.method != 'POST':
-        return HTTP_405_METHOD_NOT_ALLOWED
-    
-    # Checks on request.
+       
     if 'id_token' not in request.json:
         return jsonify({
             'error': "'id_token' is missing from request"
@@ -56,7 +51,8 @@ def login():
     
     try:
         google_response = decode_token(token)
-    except Exception:
+    except Exception as ex:
+        logging.log(logging.ERROR, ex)
         return {"error":"Invalid Token"}, HTTP_400_BAD_REQUEST
 
     email = google_response['email']
@@ -71,8 +67,7 @@ def login():
         user_profile = UserProfile.query.filter_by(email=email).first()
         return jsonify(get_user_info(user_profile.id)), HTTP_200_OK
 
-    # User doesn't exist yet
-    # User Profile
+    # User doesn't exist yet, create user profile
     new_user = UserProfile(
         id=uuid.uuid4(),
         first_name=first_name,
@@ -99,7 +94,6 @@ def login():
 
 
 def get_user_info(uid):    
-    
     """
     Returns a user's profile information using the user_id
     """
@@ -117,8 +111,6 @@ def get_user_info(uid):
 
 
 def get_last_unreturned_book(user_id):
-    
-    
     """
     Returns the last book a user borrowed.
     """

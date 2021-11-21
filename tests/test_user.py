@@ -1,17 +1,18 @@
 import os
 import json
-from src import app, create_app
+
 from unittest import TestCase
+from dotenv import load_dotenv
+
+from src import app, create_app
 from src.user import decode_token, login, get_user_info, get_last_unreturned_book
 from src.constants.http_status_codes import HTTP_200_OK, HTTP_404_NOT_FOUND, HTTP_405_METHOD_NOT_ALLOWED,HTTP_400_BAD_REQUEST
 
 
-import unittest
+load_dotenv()
 
 class TestUser(TestCase):
-    
-    def setUp(self):
-        pass
+
     
     def test_token_decode(self):
         """
@@ -19,19 +20,7 @@ class TestUser(TestCase):
         """
 
         token = {
-            'id_token': "eyJhbGciOiJSUzI1NiIsImtpZCI6IjI3YzcyNjE5ZDA5MzVhMjkwYzQxYzNmMDEwMTY3MTM4Njg1ZjdlNTMiLCJ0eXAiOiJKV1" \
-                   "QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiMTcwMDQ0NTM1MzEzLWYwMmM4aGQwMjBwdGhhN24wdDRmc" \
-                   "mFvdW8yYXA5YnFxLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiMTcwMDQ0NTM1MzEzLWYwMmM4aGQwMjBwdGh" \
-                   "hN24wdDRmcmFvdW8yYXA5YnFxLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTAzOTE3NDEzMTM4OTI4NDc1M" \
-                   "TMyIiwiZW1haWwiOiJ5YWtpdGFidS5pb0BnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXRfaGFzaCI6InVtU01" \
-                   "zeV9EQ3lVRXJyTFZCQ3VmbmciLCJuYW1lIjoiWWFraXRhYnUgUHJvamVjdCIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nb" \
-                   "GV1c2VyY29udGVudC5jb20vYS9BQVRYQUp6bjdWNWZYaGZuYXpvVjYyNWVDY25pR21yYXpuNEd5dVhqQW5lUz1zOTYtYyIsImd" \
-                   "pdmVuX25hbWUiOiJZYWtpdGFidSIsImZhbWlseV9uYW1lIjoiUHJvamVjdCIsImxvY2FsZSI6ImVuLUdCIiwiaWF0IjoxNjM3M" \
-                   "DE5MDIyLCJleHAiOjE2MzcwMjI2MjIsImp0aSI6ImNkNzAyYzgxOGEwNDFhOTJkNWFlNzU1ZmM4OWFkMjhjZDFkOTU1NGMifQ.U" \
-                   "jGqawnbzRHTtoNDLneEwbHXw954NOiyS3GSXIo1j-lfUYmGtFMkXLTpMuEFHX6xRX-U7x0stxQ_riz4U28v2ThmHLFbOdaPsWAi" \
-                   "sf2kUGznT3jhW7YvbQht8uSy9HSVKHZkVsozmryVFUocheSMBAwbjjJh0zE8QJv9DOTTKHzGbQcnQXmPP2BJs3Z1xlXMxXbXLWb" \
-                   "T6-rGDMBtQUenD0GmVeY8cnPgEo12BAajenljtSW8ec7EdDRW44gNLR5ba2huBld7609oUdo4nLm_oIXGyVHuCzlv1OBJyyT5EO" \
-                   "yU98jiHF3e7AyTSMtCD5s7WvbTvKy8So4PGeZxnRmKjA"
+            'id_token': os.environ.get("TEST_TOKEN")
                    }
         decoded_token = decode_token(token['id_token'])
 
@@ -44,19 +33,7 @@ class TestUser(TestCase):
         Test case covering Valid Login
         """
         token = {
-            'id_token': "eyJhbGciOiJSUzI1NiIsImtpZCI6IjI3YzcyNjE5ZDA5MzVhMjkwYzQxYzNmMDEwMTY3MTM4Njg1ZjdlNTMiLCJ0eXAiOiJKV1" \
-                   "QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiMTcwMDQ0NTM1MzEzLWYwMmM4aGQwMjBwdGhhN24wdDRmc" \
-                   "mFvdW8yYXA5YnFxLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiMTcwMDQ0NTM1MzEzLWYwMmM4aGQwMjBwdGh" \
-                   "hN24wdDRmcmFvdW8yYXA5YnFxLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTAzOTE3NDEzMTM4OTI4NDc1M" \
-                   "TMyIiwiZW1haWwiOiJ5YWtpdGFidS5pb0BnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXRfaGFzaCI6InVtU01" \
-                   "zeV9EQ3lVRXJyTFZCQ3VmbmciLCJuYW1lIjoiWWFraXRhYnUgUHJvamVjdCIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nb" \
-                   "GV1c2VyY29udGVudC5jb20vYS9BQVRYQUp6bjdWNWZYaGZuYXpvVjYyNWVDY25pR21yYXpuNEd5dVhqQW5lUz1zOTYtYyIsImd" \
-                   "pdmVuX25hbWUiOiJZYWtpdGFidSIsImZhbWlseV9uYW1lIjoiUHJvamVjdCIsImxvY2FsZSI6ImVuLUdCIiwiaWF0IjoxNjM3M" \
-                   "DE5MDIyLCJleHAiOjE2MzcwMjI2MjIsImp0aSI6ImNkNzAyYzgxOGEwNDFhOTJkNWFlNzU1ZmM4OWFkMjhjZDFkOTU1NGMifQ.U" \
-                   "jGqawnbzRHTtoNDLneEwbHXw954NOiyS3GSXIo1j-lfUYmGtFMkXLTpMuEFHX6xRX-U7x0stxQ_riz4U28v2ThmHLFbOdaPsWAi" \
-                   "sf2kUGznT3jhW7YvbQht8uSy9HSVKHZkVsozmryVFUocheSMBAwbjjJh0zE8QJv9DOTTKHzGbQcnQXmPP2BJs3Z1xlXMxXbXLWb" \
-                   "T6-rGDMBtQUenD0GmVeY8cnPgEo12BAajenljtSW8ec7EdDRW44gNLR5ba2huBld7609oUdo4nLm_oIXGyVHuCzlv1OBJyyT5EO" \
-                   "yU98jiHF3e7AyTSMtCD5s7WvbTvKy8So4PGeZxnRmKjA"
+            'id_token': os.environ.get("TEST_TOKEN")
                    }
         flask_app = create_app()
         
