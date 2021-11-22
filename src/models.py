@@ -37,7 +37,7 @@ class UserProfile(db.Model):
 
     # Relationships
     user_login = db.relationship("UserLogin", backref="user_profile")
-    borrowed = db.relationship("Borrowing", backref="user_profile")
+    borrowed = db.relationship("Borrow", backref="user_profile")
     book = db.relationship("Book", backref="user_profile", lazy=True)
     
     def __init__(self, **kwargs):
@@ -64,14 +64,14 @@ class Book(db.Model):
     is_available = db.Column(db.Boolean, default=True)
     loan_points = db.Column(db.Integer, default=10)
 
-    book = db.relationship("Borrowing", backref="book", lazy=True)
+    book = db.relationship("Borrow", backref="book", lazy=True)
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
 
-class Borrowing(db.Model):
-    __tablename__ = 'borrowing'
+class Borrow(db.Model):
+    __tablename__ = 'borrow'
 
     id = db.Column(UUID(as_uuid=True), primary_key=True)
     borrowed_date = db.Column(db.DateTime, default=datetime.now())

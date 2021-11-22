@@ -24,7 +24,7 @@ class TestUser(TestCase):
                    }
         decoded_token = decode_token(token['id_token'])
 
-        self.assertEqual(decoded_token['email'], 'yakitabu.io@gmail.com')
+        self.assertEqual(decoded_token['email'], os.environ.get("EMAIL"))
         self.assertEqual(decoded_token['given_name'], 'Yakitabu')
         self.assertEqual(decoded_token['family_name'], 'Project')
 

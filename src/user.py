@@ -7,7 +7,7 @@ from google.auth import jwt
 from flask import Blueprint, jsonify, request
 
 from src.constants.http_status_codes import HTTP_200_OK,HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
-from src.models import UserLogin, UserProfile, db, Borrowing
+from src.models import UserLogin, UserProfile, db, Borrow
 
 
 user = Blueprint('user', __name__, url_prefix='/api/v1/user')
@@ -35,7 +35,7 @@ def decode_token(token_object):
     }
     """
     # https://google-auth.readthedocs.io/en/latest/reference/google.auth.jwt.html#google.auth.jwt.decode
-    # verify=False will skip signature and claim Verfication. Verification is done by default.
+    # Disabling verification because we don’t have there required certificates to do this verification in google ATM.
     return jwt.decode(token_object, verify=False)
 
 
@@ -55,10 +55,10 @@ def login():
         logging.log(logging.ERROR, ex)
         return {"error":"Invalid Token"}, HTTP_400_BAD_REQUEST
 
-    email = google_response['email']
-    first_name = google_response['given_name']
-    last_name = google_response['family_name']
-    picture_url = google_response['picture']
+    email = google_response.get('email')
+    first_name = google_response.get('given_name')
+    last_name = google_response.get('family_name')
+    picture_url = google_response.get('picture')
 
     # Check if user already exists. If no, create their profile
     user_exists = UserProfile.query.filter_by(email=email).first()
@@ -90,6 +90,11 @@ def login():
     db.session.commit()
 
     user_profile = UserProfile.query.filter_by(id=new_user.id).first()
+    if not user_profile:
+        return jsonify({
+            "error": "This user doesn't have a profile."
+            })
+    
     return jsonify(get_user_info(user_profile.id)), HTTP_200_OK
 
 
@@ -114,10 +119,10 @@ def get_last_unreturned_book(user_id):
     """
     Returns the last book a user borrowed.
     """
-    last_borrowed = Borrowing.query.filter_by(
+    last_borrowed = Borrow.query.filter_by(
         borrower=user_id,
         returned_date=None
-    ).order_by(Borrowing.created_at.desc()).first()
+    ).order_by(Borrow.created_at.desc()).first()
 
     # User has borrowed at least one book
     if last_borrowed:
