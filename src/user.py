@@ -35,7 +35,7 @@ def decode_token(token_object):
     }
     """
     # https://google-auth.readthedocs.io/en/latest/reference/google.auth.jwt.html#google.auth.jwt.decode
-    # Disabling verification because we don’t have there required certificates to do this verification in google ATM.
+    # Disabling verification because we don’t have the required certificates to do this verification in google ATM.
     return jwt.decode(token_object, verify=False)
 
 
