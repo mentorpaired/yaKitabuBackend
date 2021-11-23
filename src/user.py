@@ -36,7 +36,11 @@ def decode_token(token_object):
     """
     # https://google-auth.readthedocs.io/en/latest/reference/google.auth.jwt.html#google.auth.jwt.decode
     # Disabling verification because we don’t have the required certificates to do this verification in google at the moment.
-    return jwt.decode(token_object, verify=False)
+    try:
+        decoded_token = jwt.decode(token_object, verify=False)
+        return decoded_token
+    except ValueError as ex:
+        return HTTP_400_BAD_REQUEST
 
 
 @user.post('/login/google')
@@ -49,11 +53,13 @@ def login():
 
     token = request.json['id_token']
     
-    try:
-        google_response = decode_token(token)
-    except Exception as ex:
-        logging.log(logging.ERROR, ex)
-        return jsonify({"error":"Invalid Token"}), HTTP_400_BAD_REQUEST
+    google_response = decode_token(token)
+    
+    if google_response == HTTP_400_BAD_REQUEST:
+        return jsonify({
+            'error': "Invalid Token"
+        }), HTTP_400_BAD_REQUEST
+
 
     email = google_response.get('email')
     first_name = google_response.get('given_name')
