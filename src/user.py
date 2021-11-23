@@ -6,7 +6,7 @@ from datetime import datetime
 from google.auth import jwt
 from flask import Blueprint, jsonify, request
 
-from src.constants.http_status_codes import HTTP_200_OK,HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
+from src.constants.http_status_codes import HTTP_200_OK,HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED, HTTP_404_NOT_FOUND
 from src.models import UserLogin, UserProfile, db, Borrow
 
 
@@ -35,7 +35,7 @@ def decode_token(token_object):
     }
     """
     # https://google-auth.readthedocs.io/en/latest/reference/google.auth.jwt.html#google.auth.jwt.decode
-    # Disabling verification because we don’t have the required certificates to do this verification in google ATM.
+    # Disabling verification because we don’t have the required certificates to do this verification in google at the moment.
     return jwt.decode(token_object, verify=False)
 
 
@@ -53,7 +53,7 @@ def login():
         google_response = decode_token(token)
     except Exception as ex:
         logging.log(logging.ERROR, ex)
-        return {"error":"Invalid Token"}, HTTP_400_BAD_REQUEST
+        return jsonify({"error":"Invalid Token"}), HTTP_400_BAD_REQUEST
 
     email = google_response.get('email')
     first_name = google_response.get('given_name')
@@ -93,9 +93,9 @@ def login():
     if not user_profile:
         return jsonify({
             "error": "This user doesn't have a profile."
-            })
+            }), HTTP_404_NOT_FOUND
     
-    return jsonify(get_user_info(user_profile.id)), HTTP_200_OK
+    return jsonify(get_user_info(user_profile.id)), HTTP_201_CREATED
 
 
 def get_user_info(uid):    
@@ -103,6 +103,12 @@ def get_user_info(uid):
     Returns a user's profile information using the user_id
     """
     user_profile = UserProfile.query.filter_by(id=uid).first()
+    
+    if not user_profile:
+        return jsonify({
+            "error": "This user doesn't have a profile."
+            }), HTTP_404_NOT_FOUND
+    
     user_info = {
         'id': user_profile.id,
         'first_name': user_profile.first_name,

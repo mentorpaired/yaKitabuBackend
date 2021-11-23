@@ -26,9 +26,9 @@ class UserProfile(db.Model):
     __tablename__ = 'user_profile'
 
     id = db.Column(UUID(as_uuid=True), primary_key=True)
-    first_name = db.Column(db.String(200), nullable=False)
-    last_name = db.Column(db.String(200), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+    first_name = db.Column(db.String(254), nullable=False)
+    last_name = db.Column(db.String(254), nullable=False)
+    email = db.Column(db.String(254), unique=True, nullable=False)
     picture_url = db.Column(db.String(300))
     available_points = db.Column(db.Integer, default=20)
     used_points = db.Column(db.Integer)
@@ -62,7 +62,7 @@ class Book(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
     is_available = db.Column(db.Boolean, default=True)
-    loan_points = db.Column(db.Integer, default=10)
+    loan_points = db.Column(db.Integer)
 
     book = db.relationship("Borrow", backref="book", lazy=True)
     
