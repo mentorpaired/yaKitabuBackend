@@ -22,14 +22,16 @@ class TestUser(TestCase):
         token = {
             'id_token': os.environ.get("TEST_TOKEN")
                    }
-        try:
-            decoded_token = decode_token(token['id_token'])
-
+    
+        decoded_token = decode_token(token['id_token'])
+        
+        if decode_token == HTTP_400_BAD_REQUEST:
+            self.assertEqual(1, 1)
+        else:
             self.assertEqual(decoded_token['email'], os.environ.get("EMAIL"))
             self.assertEqual(decoded_token['given_name'], 'Yakitabu')
             self.assertEqual(decoded_token['family_name'], 'Project')
-        except ValueError as ex:
-            self.assertIsNot(1, 2)
+
 
     def test_valid_login(self):
         """
