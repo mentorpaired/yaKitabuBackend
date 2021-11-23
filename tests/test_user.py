@@ -1,5 +1,6 @@
 import os
 import json
+import logging
 
 from unittest import TestCase
 from dotenv import load_dotenv
@@ -88,5 +89,7 @@ class TestUser(TestCase):
         with flask_app.test_client() as test_client:
             response = test_client.get('http://localhost:5000/api/v1/user/login/google')
             
-            assert "yakitabu.io@gmail.com" == os.environ.get("EMAIL")
+            
+            logging.info(os.environ.get("EMAIL"))
+            self.assertEqual("yakitabu.io@gmail.com" == os.environ.get("EMAIL"))
             assert response.status_code == HTTP_405_METHOD_NOT_ALLOWED
