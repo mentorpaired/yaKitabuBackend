@@ -26,11 +26,11 @@ class UserProfile(db.Model):
     __tablename__ = 'user_profile'
 
     id = db.Column(UUID(as_uuid=True), primary_key=True)
-    first_name = db.Column(db.String(254), nullable=False)
-    last_name = db.Column(db.String(254), nullable=False)
+    first_name = db.Column(db.String(200), nullable=False)
+    last_name = db.Column(db.String(200), nullable=False)
     email = db.Column(db.String(254), unique=True, nullable=False)
     picture_url = db.Column(db.String(300))
-    available_points = db.Column(db.Integer, default=20)
+    available_points = db.Column(db.Integer)
     used_points = db.Column(db.Integer)
     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
@@ -77,7 +77,7 @@ class Borrow(db.Model):
     borrowed_date = db.Column(db.DateTime, default=datetime.now())
     deadline = db.Column(db.DateTime, nullable=False)
     returned_date = db.Column(db.DateTime)
-    points_used = db.Column(db.Integer, default=0)
+    points_used = db.Column(db.Integer)
     book_id = db.Column(UUID(as_uuid=True), db.ForeignKey("book.id"), nullable=False)
     borrower = db.Column(UUID(as_uuid=True), db.ForeignKey("user_profile.id"), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
