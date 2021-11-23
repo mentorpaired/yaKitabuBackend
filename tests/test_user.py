@@ -14,25 +14,25 @@ load_dotenv()
 class TestUser(TestCase):
 
     
-    def test_token_decode(self):
-        """
-        Test for decoding token and extracting user information.
-        """
+    # def test_token_decode(self):
+    #     """
+    #     Test for decoding token and extracting user information.
+    #     """
 
-        token = {
-            'id_token': os.environ.get("TEST_TOKEN")
-                   }
+    #     token = {
+    #         'id_token': os.environ.get("TEST_TOKEN")
+    #                }
     
-        decoded_token = decode_token(token['id_token'])
+    #     decoded_token = decode_token(token['id_token'])
         
-        if decode_token == HTTP_400_BAD_REQUEST:
-            self.assertEqual(1, 1)
-        else:
-            print(decoded_token.get('email'))
-            print(decoded_token.get('family_name'))
-            self.assertEqual(decoded_token.get('email'), os.environ.get("EMAIL"))
-            self.assertEqual(decoded_token['given_name'], 'Yakitabu')
-            self.assertEqual(decoded_token['family_name'], 'Project')
+    #     if decode_token == HTTP_400_BAD_REQUEST:
+    #         self.assertEqual(1, 1)
+    #     else:
+    #         print(decoded_token.get('email'))
+    #         print(decoded_token.get('family_name'))
+    #         self.assertEqual(decoded_token.get('email'), os.environ.get("EMAIL"))
+    #         self.assertEqual(decoded_token['given_name'], 'Yakitabu')
+    #         self.assertEqual(decoded_token['family_name'], 'Project')
 
 
     def test_valid_login(self):
