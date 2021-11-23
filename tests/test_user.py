@@ -28,7 +28,9 @@ class TestUser(TestCase):
         if decode_token == HTTP_400_BAD_REQUEST:
             self.assertEqual(1, 1)
         else:
-            self.assertEqual(decoded_token['email'], os.environ.get("EMAIL"))
+            print(decoded_token.get('email'))
+            print(decoded_token.get('family_name'))
+            self.assertEqual(decoded_token.get('email'), os.environ.get("EMAIL"))
             self.assertEqual(decoded_token['given_name'], 'Yakitabu')
             self.assertEqual(decoded_token['family_name'], 'Project')
 
