@@ -85,7 +85,3 @@ class TestUser(TestCase):
             response = test_client.get('http://localhost:5000/api/v1/user/login/google')
 
             assert response.status_code == HTTP_405_METHOD_NOT_ALLOWED
-
-
-if __name__ == '__main__':
-    unittest.main()
