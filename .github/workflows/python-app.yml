@@ -50,13 +50,12 @@ jobs:
         fields: |
           [{ "title": "Repository", "value": "${env.GITHUB_REPOSITORY}", "short": true },
           { "title": "Branch", "value": "${env.GITHUB_REF}", "short": true }]
-
-               
+          
     - name: Test using unittest
       run: |
         python -m unittest
+        
       env:
         TEST_TOKEN: ${{ secrets.TEST_TOKEN }}
         SQLALCHEMY_DATABASE_URI: ${{ secrets.SQLALCHEMY_DATABASE_URI}}
         EMAIL: ${{ secrets.EMAIL }}
-        
