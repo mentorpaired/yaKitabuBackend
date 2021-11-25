@@ -15,6 +15,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: huaxk/postgis-action@v1
+      with:
+        postgresql version: '11'  # See https://https://hub.docker.com/r/mdillon/postgis for available versions, if it is not specified, use the default value 'latest'
+    
     - uses: actions/checkout@v2
     - name: Set up Python 3.9
       uses: actions/setup-python@v2
@@ -46,13 +50,12 @@ jobs:
         fields: |
           [{ "title": "Repository", "value": "${env.GITHUB_REPOSITORY}", "short": true },
           { "title": "Branch", "value": "${env.GITHUB_REF}", "short": true }]
-
-#     - name: Test with pytest
-#       run: |
-#         pytest
         
     - name: Test using unittest
       run: |
         python -m unittest
 
-
+      env:
+        TEST_TOKEN: ${{ secrets.TEST_TOKEN }}
+        SQLALCHEMY_DATABASE_URI: ${{ secrets.SQLALCHEMY_DATABASE_URI}}
+        EMAIL: ${{ secrets.EMAIL }}
