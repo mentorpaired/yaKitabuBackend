@@ -36,12 +36,8 @@ def decode_token(token_object):
     """
     # https://google-auth.readthedocs.io/en/latest/reference/google.auth.jwt.html#google.auth.jwt.decode
     # Disabling verification because we don’t have the required certificates to do this verification in google at the moment.
-    try:
-        decoded_token = jwt.decode(token_object, verify=False)
-        return decoded_token
-    except ValueError as ex:
-        return HTTP_400_BAD_REQUEST
-
+    return jwt.decode(token_object, verify=False)
+    
 
 @user.post('/login/google')
 def login():
@@ -62,7 +58,7 @@ def login():
 
 
     email = google_response.get('email')
-    first_name = google_response.get('given_name')
+    first_name = google_response.get('given_name'),
     last_name = google_response.get('family_name')
     picture_url = google_response.get('picture')
 
@@ -101,7 +97,7 @@ def login():
             "error": "This user doesn't have a profile."
             }), HTTP_404_NOT_FOUND
     
-    return jsonify(get_user_info(user_profile.id)), HTTP_201_CREATED
+    return jsonify(get_user_info(user_profile.id)), HTTP_200_OK
 
 
 def get_user_info(uid):    

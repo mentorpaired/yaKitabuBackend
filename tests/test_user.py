@@ -1,7 +1,9 @@
 import os
 import json
-
+import logging
 from unittest import TestCase
+from unittest.mock import Mock
+
 from dotenv import load_dotenv
 
 from src import app, create_app
@@ -22,14 +24,15 @@ class TestUser(TestCase):
         token = {
             'id_token': os.environ.get("TEST_TOKEN")
                    }
-    
-        decoded_token = decode_token(token['id_token'])
+
+        decoded_token = decode_token(token.get('id_token'))
+        logging.info(decoded_token)
         
         self.assertEqual(decoded_token['email'], os.environ.get("EMAIL"))
         self.assertEqual(decoded_token['given_name'], 'Yakitabu')
         self.assertEqual(decoded_token['family_name'], 'Project')
 
-
+    
     def test_valid_login(self):
         """
         Test case covering Valid Login
@@ -39,13 +42,16 @@ class TestUser(TestCase):
                    }
         flask_app = create_app()
         
-
-        with flask_app.test_client() as test_client:
-            response = test_client.post('http://localhost:5000/api/v1/user/login/google',
-                                        data=json.dumps(token),
-                                        content_type='application/json',
-                                        )
-            assert response.status_code == HTTP_200_OK
+        try:
+            
+            with flask_app.test_client() as test_client:
+                response = test_client.post('http://localhost:5000/api/v1/user/login/google',
+                                            data=json.dumps(token),
+                                            content_type='application/json',
+                                            )
+        except ValueError as error:
+            self.assertTrue(False)
+            
             
 
     def test_invalid_login(self):
@@ -61,8 +67,8 @@ class TestUser(TestCase):
                                         data=json.dumps(token),
                                         content_type='application/json',
                                         )
-            assert response.status_code == HTTP_400_BAD_REQUEST
-
+            self.assertRaises(ValueError, decode_token, token)
+       
        
     def test_login_get(self):
         """
@@ -74,7 +80,7 @@ class TestUser(TestCase):
         with flask_app.test_client() as test_client:
             response = test_client.get('http://localhost:5000/api/v1/user/login/google')
 
-            assert response.status_code == HTTP_405_METHOD_NOT_ALLOWED
+            self.assertEqual(response.status_code, HTTP_405_METHOD_NOT_ALLOWED)
             
             
     def test_login_put(self):
@@ -87,4 +93,4 @@ class TestUser(TestCase):
         with flask_app.test_client() as test_client:
             response = test_client.get('http://localhost:5000/api/v1/user/login/google')
 
-            assert response.status_code == HTTP_405_METHOD_NOT_ALLOWED
+            self.assertEqual(response.status_code, HTTP_405_METHOD_NOT_ALLOWED)
