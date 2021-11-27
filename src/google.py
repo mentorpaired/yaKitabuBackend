@@ -10,7 +10,7 @@ from src.constants.http_status_codes import HTTP_200_OK,HTTP_201_CREATED, HTTP_4
 from src.models import UserLogin, UserProfile, db, Borrow
 
 
-usr = Blueprint('user', __name__, url_prefix='/api/v1/user')
+google_bp = Blueprint('google', __name__, url_prefix='/api')
 
 
 def decode_token(token_object):
@@ -39,7 +39,7 @@ def decode_token(token_object):
     return jwt.decode(token_object, verify=False)
     
 
-@usr.post('/login/google')
+@google_bp.post('/login/google')
 def login():
        
     if 'id_token' not in request.json:
