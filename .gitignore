@@ -58,7 +58,6 @@ instance/
 # PyBuilder
 target/
 
-
 # pyenv
 .python-version
 
@@ -81,3 +80,16 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# Virtual Environment
+virtualenv/
+
+
+# Intellij Idea
+.idea
+.idea/
+/.idea
+
+**/.vscode/
+
+.DS_Store
