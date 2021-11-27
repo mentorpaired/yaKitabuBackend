@@ -1,58 +1,49 @@
-import os
 import json
 import logging
-from unittest import TestCase
-from unittest.mock import Mock
+from unittest import TestCase, mock
 
 from dotenv import load_dotenv
+from flask import jsonify
 
 from src import app, create_app
-from src.user import decode_token, login, get_user_info, get_last_unreturned_book
-from src.constants.http_status_codes import HTTP_200_OK, HTTP_404_NOT_FOUND, HTTP_405_METHOD_NOT_ALLOWED,HTTP_400_BAD_REQUEST
+from src.user import decode_token, login
+from src.constants.http_status_codes import HTTP_200_OK, HTTP_405_METHOD_NOT_ALLOWED,HTTP_400_BAD_REQUEST
 
-
-load_dotenv()
 
 class TestUser(TestCase):
 
-    
-    def test_token_decode(self):
+    @mock.patch("src.user.decode_token", return_value={
+        'given_name': 'Yakitabu',
+        'family_name': 'Project'
+                
+    })
+    def test_token_decode(self, decode_token):
         """
         Test for decoding token and extracting user information.
         """
 
-        token = {
-            'id_token': os.environ.get("TEST_TOKEN")
-                   }
+        decoded_token = decode_token("<Dummy_Token>")
 
-        decoded_token = decode_token(token.get('id_token'))
-        logging.info(decoded_token)
-        
-        self.assertEqual(decoded_token['email'], os.environ.get("EMAIL"))
         self.assertEqual(decoded_token['given_name'], 'Yakitabu')
         self.assertEqual(decoded_token['family_name'], 'Project')
 
     
-    def test_valid_login(self):
+    @mock.patch("src.user.login", return_value=200 )
+    def test_valid_login(self,login):
         """
-        Test case covering Valid Login
+        Test case covering valid login
         """
-        token = {
-            'id_token': os.environ.get("TEST_TOKEN")
-                   }
+    
         flask_app = create_app()
         
-        try:
-            
-            with flask_app.test_client() as test_client:
-                response = test_client.post('http://localhost:5000/api/v1/user/login/google',
-                                            data=json.dumps(token),
-                                            content_type='application/json',
-                                            )
-        except ValueError as error:
-            self.assertTrue(False)
-            
-            
+        with flask_app.test_client() as test_client:
+            response = test_client.post('http://localhost:5000/api/v1/user/login/google',
+                                        data=json.dumps({'id':'sometoken'}),
+                                        content_type='application/json',
+                                        )
+            response.status_code = login()
+            self.assertEqual(response.status_code, HTTP_200_OK)
+
 
     def test_invalid_login(self):
         """
