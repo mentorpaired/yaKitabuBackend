@@ -5,7 +5,7 @@ from unittest import TestCase, mock
 from dotenv import load_dotenv
 from flask import jsonify
 
-from src import app, create_app
+from src import create_app
 from src.google import decode_token, login
 from src.constants.http_status_codes import HTTP_200_OK, HTTP_405_METHOD_NOT_ALLOWED,HTTP_400_BAD_REQUEST
 
