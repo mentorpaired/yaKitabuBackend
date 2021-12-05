@@ -202,6 +202,10 @@ Please install and set up the following packages first. Upgrade if you find the 
   heroku login
   ```
 
+
+- Run migrations command to create the tables in heroku after deployment.
+  ```flask create_tables
+  ```
 Contact [Seunfunmi](https://github.com/seun-beta), [Tosin](https://github.com/tosintubi) for more details.
 
 
