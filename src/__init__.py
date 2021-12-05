@@ -1,7 +1,7 @@
 import os
 import json
 
-from flask import Flask, jsonify
+from flask import Flask
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 
@@ -23,10 +23,8 @@ def create_app(test_config=None):
             
         SECRET_KEY = os.environ.get('SECRET_KEY')
         if not SECRET_KEY:
-            return jsonify({
-                'error':'secret key is missing'
-                })
-        
+            return 'secret key is missing'
+    
         app.config.from_mapping(
             SECRET_KEY=SECRET_KEY,
             SQLALCHEMY_DATABASE_URI=db_url,
