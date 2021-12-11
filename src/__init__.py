@@ -11,22 +11,27 @@ from src.manage import create_tables
 
 load_dotenv()
 
+def get_db_url():
+    # Heroku hack
+    db_url = str(os.environ.get('DATABASE_URL'))
+    if db_url.startswith('postgres://'):
+        db_url = db_url.replace('postgres://', 'postgresql://',1)
+    return db_url
+
+def get_secret():
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+    if not SECRET_KEY:
+        return 'S9M3_SeCR3T'
+    return SECRET_KEY
+    
+
 def create_app(test_config=None):
     app: Flask = Flask(__name__, instance_relative_config=True)
     
-    if not test_config:
-        # Heroku Postgresql hack.
-        db_url = str(os.environ.get('DATABASE_URL'))
-        if db_url.startswith('postgres://'):
-            db_url = db_url.replace('postgres://', 'postgresql://')
-            
-        SECRET_KEY = os.environ.get('SECRET_KEY')
-        if not SECRET_KEY:
-            return 'secret key is missing'
-    
+    if  not test_config:
         app.config.from_mapping(
-            SECRET_KEY=SECRET_KEY,
-            SQLALCHEMY_DATABASE_URI=db_url,
+            SECRET_KEY=get_secret(),
+            SQLALCHEMY_DATABASE_URI=get_db_url(),
             SQLALCHEMY_TRACK_MODIFICATIONS=False,
             JSON_SORT_KEYS=False
         )

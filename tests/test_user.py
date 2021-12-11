@@ -29,6 +29,7 @@ class TestUser(TestCase):
 
     
     @mock.patch("src.google.login", return_value=200 )
+    @mock.patch.dict(os.environ, {"DATABASE_URL": "postgres://postgres:postgres@<IP>/<some_db>"})
     def test_valid_login(self,login):
         """
         Test case covering valid login
@@ -44,7 +45,8 @@ class TestUser(TestCase):
             response.status_code = login()
             self.assertEqual(response.status_code, HTTP_200_OK)
 
-
+    @mock.patch.dict(os.environ, {"DATABASE_URL": "postgres://postgres:postgres@<IP>/<some_db>"})
+    @mock.patch.dict(os.environ, {"SECRET_KEY": "SOME_SECRET"})
     def test_invalid_login(self):
         """
         Test case covering Bad Request
