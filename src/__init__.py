@@ -18,25 +18,26 @@ def get_db_url():
     if db_url:       
         if db_url.startswith('postgres://'):
             db_url = db_url.replace('postgres://', 'postgresql://',1)
-        return db_url
+    return db_url
     
 
 def create_app(test_config=None):
     app: Flask = Flask(__name__, instance_relative_config=True)
     
     secret_key = os.environ.get('SECRET_KEY')
-    if not secret_key:
+    
+    if secret_key is None:
         raise Exception("SECRET_KEY does not exist")
     
     db_url = get_db_url()
     
-    if not db_url:
+    if db_url is None:
         raise Exception("DATABASE_URL does not exist")
     
     if  not test_config:
         app.config.from_mapping(
             SECRET_KEY=secret_key,
-            SQLALCHEMY_DATABASE_URI=get_db_url(),
+            SQLALCHEMY_DATABASE_URI=db_url,
             SQLALCHEMY_TRACK_MODIFICATIONS=False,
             JSON_SORT_KEYS=False
         )
