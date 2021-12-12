@@ -1,3 +1,4 @@
+import os
 import json
 import logging
 from unittest import TestCase, mock
@@ -5,14 +6,14 @@ from unittest import TestCase, mock
 from dotenv import load_dotenv
 from flask import jsonify
 
-from src import app, create_app
-from src.user import decode_token, login
+from src import create_app
+from src.google import decode_token, login
 from src.constants.http_status_codes import HTTP_200_OK, HTTP_405_METHOD_NOT_ALLOWED,HTTP_400_BAD_REQUEST
 
 
 class TestUser(TestCase):
 
-    @mock.patch("src.user.decode_token", return_value={
+    @mock.patch("src.google.decode_token", return_value={
         'given_name': 'Yakitabu',
         'family_name': 'Project'
                 
@@ -28,7 +29,8 @@ class TestUser(TestCase):
         self.assertEqual(decoded_token['family_name'], 'Project')
 
     
-    @mock.patch("src.user.login", return_value=200 )
+    @mock.patch("src.google.login", return_value=200 )
+    @mock.patch.dict(os.environ, {"DATABASE_URL": "postgres://postgres:postgres@<IP>/<some_db>"})
     def test_valid_login(self,login):
         """
         Test case covering valid login
@@ -37,14 +39,15 @@ class TestUser(TestCase):
         flask_app = create_app()
         
         with flask_app.test_client() as test_client:
-            response = test_client.post('http://localhost:5000/api/v1/user/login/google',
+            response = test_client.post('http://localhost:5000/api/login/google',
                                         data=json.dumps({'id':'sometoken'}),
                                         content_type='application/json',
                                         )
             response.status_code = login()
             self.assertEqual(response.status_code, HTTP_200_OK)
 
-
+    @mock.patch.dict(os.environ, {"DATABASE_URL": "postgres://postgres:postgres@<IP>/<some_db>"})
+    @mock.patch.dict(os.environ, {"SECRET_KEY": "SOME_SECRET"})
     def test_invalid_login(self):
         """
         Test case covering Bad Request
@@ -54,7 +57,7 @@ class TestUser(TestCase):
         
        
         with flask_app.test_client() as test_client:
-            response = test_client.post('http://localhost:5000/api/v1/user/login/google',
+            response = test_client.post('http://localhost:5000/api/login/google',
                                         data=json.dumps(token),
                                         content_type='application/json',
                                         )
@@ -69,7 +72,7 @@ class TestUser(TestCase):
         flask_app = create_app()
 
         with flask_app.test_client() as test_client:
-            response = test_client.get('http://localhost:5000/api/v1/user/login/google')
+            response = test_client.get('http://localhost:5000/api/login/google')
 
             self.assertEqual(response.status_code, HTTP_405_METHOD_NOT_ALLOWED)
             
@@ -82,6 +85,6 @@ class TestUser(TestCase):
         flask_app = create_app()
 
         with flask_app.test_client() as test_client:
-            response = test_client.get('http://localhost:5000/api/v1/user/login/google')
+            response = test_client.get('http://localhost:5000/api/login/google')
 
             self.assertEqual(response.status_code, HTTP_405_METHOD_NOT_ALLOWED)

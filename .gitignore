@@ -93,3 +93,4 @@ virtualenv/
 **/.vscode/
 
 .DS_Store
+/log

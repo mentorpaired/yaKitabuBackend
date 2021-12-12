@@ -6,22 +6,19 @@ from sqlalchemy.dialects.postgresql import UUID
 
 db = SQLAlchemy()
 
-class UserLogin(db.Model):
-    __tablename__ = 'user_login'
-    
+class Author(db.Model):
+    __tablename__ = 'author'
+
     id = db.Column(UUID(as_uuid=True), primary_key=True)
-    password_hash = db.Column(db.String(200))
-    google_login = db.Column(db.Boolean, default=False)
-    last_login = db.Column(db.DateTime, default=datetime.now())
-    is_active = db.Column(db.Boolean, default=True, nullable=False)
-    user_profile_id = db.Column(UUID(as_uuid=True), db.ForeignKey("user_profile.id"))
+    first_name = db.Column(db.String(200), nullable=False)
+    last_name = db.Column(db.String(200), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
+    book = db.relationship("Book", backref="author", lazy=True)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
-
+        
 class UserProfile(db.Model):
     __tablename__ = 'user_profile'
 
@@ -46,6 +43,20 @@ class UserProfile(db.Model):
     def __repr__(self):
         return f'User Profile ({self.id})'
 
+class UserLogin(db.Model):
+    __tablename__ = 'user_login'
+    
+    id = db.Column(UUID(as_uuid=True), primary_key=True)
+    password_hash = db.Column(db.String(200))
+    google_login = db.Column(db.Boolean, default=False)
+    last_login = db.Column(db.DateTime, default=datetime.now())
+    is_active = db.Column(db.Boolean, default=True, nullable=False)
+    user_profile_id = db.Column(UUID(as_uuid=True), db.ForeignKey("user_profile.id"))
+    created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
+    updated_at = db.Column(db.DateTime, onupdate=datetime.now())
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
 class Book(db.Model):
     __tablename__ = 'book'
@@ -69,7 +80,6 @@ class Book(db.Model):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-
 class Borrow(db.Model):
     __tablename__ = 'borrow'
 
@@ -82,20 +92,6 @@ class Borrow(db.Model):
     borrower = db.Column(UUID(as_uuid=True), db.ForeignKey("user_profile.id"), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-
-class Author(db.Model):
-    __tablename__ = 'author'
-
-    id = db.Column(UUID(as_uuid=True), primary_key=True)
-    first_name = db.Column(db.String(200), nullable=False)
-    last_name = db.Column(db.String(200), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
-    updated_at = db.Column(db.DateTime, onupdate=datetime.now())
-    book = db.relationship("Book", backref="author", lazy=True)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
