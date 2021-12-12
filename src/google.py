@@ -56,7 +56,6 @@ def login():
             'error': "Invalid Token"
         }), HTTP_400_BAD_REQUEST
 
-
     email = google_response.get('email')
     first_name = google_response.get('given_name'),
     last_name = google_response.get('family_name')
