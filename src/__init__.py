@@ -4,10 +4,12 @@ import json
 from flask import Flask
 from flask_migrate import Migrate
 from dotenv import load_dotenv
+from flasgger import Swagger
 
 from src.models import db
 from src.google import google_bp
 from src.manage import create_tables
+from src.config.swagger import  template,swagger_config
 
 load_dotenv()
 
@@ -39,7 +41,11 @@ def create_app(test_config=None):
             SECRET_KEY=secret_key,
             SQLALCHEMY_DATABASE_URI=db_url,
             SQLALCHEMY_TRACK_MODIFICATIONS=False,
-            JSON_SORT_KEYS=False
+            JSON_SORT_KEYS=False,
+            SWAGGER={
+                'title': 'Bookiemap P2P API',
+                'uiversion':3
+            },
         )
     else:
        app.config.from_mapping(test_config)
@@ -48,6 +54,9 @@ def create_app(test_config=None):
     db.app = app
     db.init_app(app)
     migrate = Migrate(app,db)
+    
+    # swagger configuration
+    Swagger(app=app, config=swagger_config,template=template)
 
     # Register blueprints.
     app.register_blueprint(google_bp)
