@@ -1,15 +1,14 @@
-import logging
-import json
 import uuid
 from datetime import datetime
 
 from google.auth import jwt
 from flask import Blueprint, jsonify, request
 
-from src.constants.http_status_codes import HTTP_200_OK,HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED, HTTP_404_NOT_FOUND
+from src.constants.http_status_codes import HTTP_200_OK,HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 from src.models import UserLogin, UserProfile, db, Borrow
 
 
+# Blueprint for google module.
 google_bp = Blueprint('google', __name__, url_prefix='/api')
 
 
@@ -41,6 +40,11 @@ def decode_token(token_object):
 
 @google_bp.post('/login/google')
 def login():
+    """Endpoint for google login
+
+    Returns:
+        json: user_info.
+    """
        
     if 'id_token' not in request.json:
         return jsonify({
@@ -49,13 +53,16 @@ def login():
 
     token = request.json['id_token']
     
-    google_response = decode_token(token)
-    
-    if google_response == HTTP_400_BAD_REQUEST:
-        return jsonify({
-            'error': "Invalid Token"
+    try:
+        
+        google_response = decode_token(token)
+        
+    except ValueError as ex:
+        return  jsonify({
+            'error': " invalid id_token"
         }), HTTP_400_BAD_REQUEST
-
+    
+    
     email = google_response.get('email')
     first_name = google_response.get('given_name'),
     last_name = google_response.get('family_name')
@@ -64,9 +71,16 @@ def login():
     # Check if user already exists. If no, create their profile
     user_exists = UserProfile.query.filter_by(email=email).first()
 
+    # user already exists, just return their profile information
     if user_exists:
-        user_profile = UserProfile.query.filter_by(email=email).first()
-        return jsonify(get_user_info(user_profile.id)), HTTP_200_OK
+        user_login = UserLogin.query.filter_by(user_profile_id=user_exists.id).first()
+        
+        # update their last login.
+        user_login.last_login = datetime.now()
+               
+        db.session.commit()
+        
+        return jsonify(get_user_info(user_exists.id)), HTTP_200_OK
 
     # User doesn't exist yet, create user profile
     new_user = UserProfile(
@@ -96,12 +110,12 @@ def login():
             "error": "This user doesn't have a profile."
             }), HTTP_404_NOT_FOUND
     
-    return jsonify(get_user_info(user_profile.id)), HTTP_200_OK
+    return jsonify(get_user_info(user_profile.id)), HTTP_201_CREATED
 
 
 def get_user_info(uid):    
     """
-    Returns a user's profile information using the user_id
+    Helper funtion that returns user's profile information using the user_id
     """
     user_profile = UserProfile.query.filter_by(id=uid).first()
     

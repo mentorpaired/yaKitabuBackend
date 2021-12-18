@@ -54,6 +54,9 @@ Please install these packages and set up your environment in the order listed be
 
 - Python 3. Run the 'python3 -V' command to see the version you have installed.
 
+- Ensure you have python version >= 3.8+ installed.
+
+
 - Using VS Code as our text editor:  right click on the folder explorer and open a terminal
 
 
@@ -96,7 +99,6 @@ pip install -r requirements.txt
 
 
 
-
 - Run server to ensure everything is working properly.
 - On The Terminal,
 
@@ -114,6 +116,8 @@ Please install and set up the following packages first. Upgrade if you find the 
   ```sh
   python3 -V
   ```
+
+- Ensure you have python version >= 3.8+ installed.
 
 - Download [pip](https://pip.pypa.io/en/latest/installing/) and follow the instructions in the link as an installation guide.
 
@@ -197,6 +201,11 @@ Please install and set up the following packages first. Upgrade if you find the 
 
 - You may also need to have [Heroku](https://devcenter.heroku.com/articles/heroku-cli).
 
+- Update your environment variables by remaning the environment variables  file from `.env.example` to `.env` and provide entries for the environment placeholders in the `.env` file.
+  ```sh
+  heroku login
+  ```
+
 - Run the `Heroku` login commands in your terminal after installation
   ```sh
   heroku login
@@ -204,8 +213,15 @@ Please install and set up the following packages first. Upgrade if you find the 
 
 
 - Run migrations command to create the tables in heroku after deployment.
-  ```flask create_tables
+  ```sh
+  flask create_tables
   ```
+
+- To run the testcases covering various functionalities, run the following command in terminal
+  ```sh
+  python -m unittest -v
+  ```
+
 Contact [Seunfunmi](https://github.com/seun-beta), [Tosin](https://github.com/tosintubi) for more details.
 
 
