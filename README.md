@@ -54,6 +54,9 @@ Please install these packages and set up your environment in the order listed be
 
 - Python 3. Run the 'python3 -V' command to see the version you have installed.
 
+- Ensure you have python version >= 3.8+ installed.
+
+
 - Using VS Code as our text editor:  right click on the folder explorer and open a terminal
 
 
@@ -96,7 +99,6 @@ pip install -r requirements.txt
 
 
 
-
 - Run server to ensure everything is working properly.
 - On The Terminal,
 
@@ -114,6 +116,8 @@ Please install and set up the following packages first. Upgrade if you find the 
   ```sh
   python3 -V
   ```
+
+- Ensure you have python version >= 3.8+ installed.
 
 - Download [pip](https://pip.pypa.io/en/latest/installing/) and follow the instructions in the link as an installation guide.
 
