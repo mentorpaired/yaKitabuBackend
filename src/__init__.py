@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 from src.models import db
 from src.google import google_bp
 from src.manage import create_tables
+from src.auth import auth
 
 load_dotenv()
 
@@ -52,7 +53,8 @@ def create_app(test_config=None):
     # Register blueprints.
     app.register_blueprint(google_bp)
     
-    # Customs command to crate table.
+    # Customs command to create table.
     app.cli.add_command(create_tables)
     
+    app.signup
     return app
