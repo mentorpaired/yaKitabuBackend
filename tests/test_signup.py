@@ -11,14 +11,13 @@ from src.google import decode_token, login
 from src.constants.http_status_codes import HTTP_200_OK, HTTP_201_CREATED, HTTP_405_METHOD_NOT_ALLOWED,HTTP_400_BAD_REQUEST
 
 
-class SignUpTest(TestCase):
+class TestSignUp(TestCase):
 
     @mock.patch("src.user.signup", return_value=201 )
     
     def test_user_signup(self,signup):
         dummy_user = {"first_name": "Johannes",  "last_name": "Döe", 
-            "email": "jd@email.com",
-            "password": "J$12(H.A5h)2Doe!"}
+            "email": "jd@email.com", "password": "J$12(H.A5h)2Doe!"}
 
         flask_app = create_app()
 
