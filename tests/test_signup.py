@@ -28,17 +28,17 @@ class TestSignUp(TestCase):
             response.status_code = signup()
             self.assertEqual(response.status_code, HTTP_201_CREATED)
 
-    @mock.patch("src.user.login", return_value=200 )
+    # @mock.patch("src.user.login", return_value=200 )
     
-    def test_user_login(self,login):
+    # def test_user_login(self,login):
 
-        test_user = { "email": "jd@email.com", "password": "J$12(H.A5h)2Doe!"}
+    #     test_user = { "email": "jd@email.com", "password": "J$12(H.A5h)2Doe!"}
 
-        flask_app = create_app()
+    #     flask_app = create_app()
 
-        with flask_app.test_client() as test_client:
-            response = test_client.post('http://localhost:5000/api/login/user',
-                                        data=json.dumps(test_user), 
-                                        content_type='application/json')
-            response.status_code = login()
-            self.assertEqual(response.status_code, HTTP_200_OK)
+    #     with flask_app.test_client() as test_client:
+    #         response = test_client.post('http://localhost:5000/api/login/user',
+    #                                     data=json.dumps(test_user), 
+    #                                     content_type='application/json')
+    #         response.status_code = login()
+    #         self.assertEqual(response.status_code, HTTP_200_OK)
