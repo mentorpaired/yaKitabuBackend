@@ -46,10 +46,10 @@ def login():
     Returns:
         json: user_info.
     """
-       
+     
     if 'id_token' not in request.json:
         return jsonify({
-            'error': "'id_token' is missing from request"
+            'error': "id_token is missing from request"
         }), HTTP_400_BAD_REQUEST
 
     token = request.json['id_token']
@@ -60,7 +60,7 @@ def login():
         
     except ValueError as ex:
         return  jsonify({
-            'error': " invalid id_token"
+            'error': "invalid id_token"
         }), HTTP_400_BAD_REQUEST
     
     
@@ -126,7 +126,7 @@ def login():
     user_profile = UserProfile.query.filter_by(id=new_user.id).first()
     if not user_profile:
         return jsonify({
-            "error": "This user doesn't have a profile."
+            "error": "this user doesn't have a profile."
             }), HTTP_404_NOT_FOUND
     
     return jsonify(get_user_info(user_profile.id)), HTTP_201_CREATED
@@ -134,13 +134,14 @@ def login():
 
 def get_user_info(uid):    
     """
-    Helper funtion that returns user's profile information using the user_id
+    Helper function that returns user's profile information using the user_id
     """
+    
     user_profile = UserProfile.query.filter_by(id=uid).first()
     
     if not user_profile:
         return jsonify({
-            "error": "This user doesn't have a profile."
+            "error": "this user doesn't have a profile."
             }), HTTP_404_NOT_FOUND
     
     user_info = {
@@ -159,6 +160,7 @@ def get_last_unreturned_book(user_id):
     """
     Returns the last book a user borrowed.
     """
+    
     last_borrowed = Borrow.query.filter_by(
         borrower=user_id,
         returned_date=None
