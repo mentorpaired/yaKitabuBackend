@@ -1,0 +1,27 @@
+Google Authentication
+---
+tags:
+  - Authentication
+parameters:
+  - name: body
+    description: The body should contain the user's id_token
+    in: body
+    required: true
+    schema:
+      type: object
+      required:
+        - "id_token"
+      properties:
+        id_token:
+          type: "string"
+          example: "Some.TOken.String"
+          
+responses:
+  200:
+    description: A returning user successfully logs in using google.
+
+  201:
+    description: New account is created and user successfully logs in.
+
+  400:
+    description: Fails to login due to bad request data.
