@@ -40,7 +40,7 @@ def decode_token(token_object):
     
 
 @google_bp.post('/login/google')
-@swag_from('./docs/google/login.yml')
+@swag_from('./docs/login/google.yml')
 def login():
     """Endpoint for google login
 

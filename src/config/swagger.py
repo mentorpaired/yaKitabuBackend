@@ -5,14 +5,14 @@ template = {
     'swagger': '2.0',
     'info': {
         'title': 'Yakitabu backend',
-        'description': 'Yakitabu Book P2P Book Loan API',
+        'description': 'Yakitabu P2P Book Loan API',
         'contact': {
             'responsibleOrganization': '',
             'responsibleDeveloper': '',
-            'email': 'yakitabu.io@yakitabu.com',
+            'email': 'yakitabu.io@gmail.com',
             'url': 'https://yakitabu-backend.herokuapp.com/',
         },
-        'termsOfService': 'www.yakitabu.com/terms',
+        'termsOfService': 'https://yakitabu-backend.herokuapp.com/terms',
         'version': '1.0'
     },
     'basePath': '/api',  # base path for blueprint registration

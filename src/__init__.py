@@ -43,7 +43,7 @@ def create_app(test_config=None):
             SQLALCHEMY_TRACK_MODIFICATIONS=False,
             JSON_SORT_KEYS=False,
             SWAGGER={
-                'title': 'Bookiemap P2P API',
+                'title': 'Yakitabu P2P Book Loan API',
                 'uiversion':3
             },
         )
