@@ -35,6 +35,7 @@ def decode_token(token_object):
     """
     # https://google-auth.readthedocs.io/en/latest/reference/google.auth.jwt.html#google.auth.jwt.decode
     # Disabling verification because we don’t have the required certificates to do this verification in google at the moment.
+    
     return jwt.decode(token_object, verify=False)
     
 
@@ -67,6 +68,24 @@ def login():
     first_name = google_response.get('given_name'),
     last_name = google_response.get('family_name')
     picture_url = google_response.get('picture')
+    
+    
+    # Checks if payload contains email, first_name and last_name.
+    if not email:
+        return jsonify({
+            'error': "the token payload does not contain email"
+        }), HTTP_400_BAD_REQUEST
+
+    if not first_name:
+        return jsonify({
+            'error': "the token payload does not contain first_name"
+        }), HTTP_400_BAD_REQUEST
+    
+    if not last_name:
+        return jsonify({
+            'error': "the token payload does not contain last_name"
+        }), HTTP_400_BAD_REQUEST
+
 
     # Check if user already exists. If no, create their profile
     user_exists = UserProfile.query.filter_by(email=email).first()
