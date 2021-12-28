@@ -1,4 +1,7 @@
 import uuid
+import os
+import time
+from dotenv import load_dotenv
 from datetime import datetime
 
 from google.auth import jwt
@@ -7,10 +10,51 @@ from flask import Blueprint, jsonify, request
 from src.constants.http_status_codes import HTTP_200_OK,HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 from src.models import UserLogin, UserProfile, db, Borrow
 
+load_dotenv()
+
 
 # Blueprint for google module.
 google_bp = Blueprint('google', __name__, url_prefix='/api')
 
+
+
+def validate_issuer(iss):
+    """Validate the Issuer of the id_token.
+
+    Args:
+        aud (string): Token Issuer
+
+    Returns:
+        bool: True\False. True if the token issuer is correct.
+    """
+    return True if os.environ.get('TOKEN_ISSUER') == iss else False
+
+
+def validate_client(aud):
+    """Validate the Client's ID on the token.
+
+    Args:
+        aud (string): Audience ID
+
+    Returns:
+        bool: True\False. True if the client is correct.
+    """
+    return True if os.environ.get('CLIENT_ID') == aud else False
+
+
+def token_expired(expire):
+    """Checks if a google tone is expired. Returns
+
+    Args:
+        expire (int): expiration time in unix epoch
+        
+    Returns:
+        bool: False | True. Returns "False" if token has not expired, otherwise True
+    """
+    exp = int(expire)
+    now = int(time.time())
+    return True if now > exp else False
+   
 
 def decode_token(token_object):
     """
@@ -64,10 +108,34 @@ def login():
         }), HTTP_400_BAD_REQUEST
     
     
+    issuer = validate_issuer(google_response.get('iss'))
+    valid_client = validate_client(google_response.get('aud'))
+    token_exp = token_expired(google_response.get('exp'))
+    
+    # breakpoint()
+    
+    if not issuer:
+        return jsonify({
+            'error': "bad id_token"
+        }), HTTP_400_BAD_REQUEST
+        
+    
+    if not valid_client:
+        return jsonify({
+            'error': "bad id_token"
+        }), HTTP_400_BAD_REQUEST
+        
+    if token_exp:
+        return jsonify({
+            'error': "expired id_token"
+        }), HTTP_400_BAD_REQUEST
+        
+    
     email = google_response.get('email')
     first_name = google_response.get('given_name'),
     last_name = google_response.get('family_name')
     picture_url = google_response.get('picture')
+    
     
     
     # Checks if payload contains email, first_name and last_name.
