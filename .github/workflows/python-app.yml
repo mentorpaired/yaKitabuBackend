@@ -59,3 +59,5 @@ jobs:
         DATABASE_URL: ${{ secrets.DATABASE_URI}}
         EMAIL: ${{ secrets.EMAIL }}
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        CLIENT_ID: ${{ secrets.CLIENT_ID}}
+        TOKEN_ISSUER: ${{ secrets.TOKEN_ISSUER}}
