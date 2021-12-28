@@ -15,46 +15,7 @@ load_dotenv()
 
 # Blueprint for google module.
 google_bp = Blueprint('google', __name__, url_prefix='/api')
-
-
-
-def validate_issuer(iss):
-    """Validate the Issuer of the id_token.
-
-    Args:
-        aud (string): Token Issuer
-
-    Returns:
-        bool: True\False. True if the token issuer is correct.
-    """
-    return True if os.environ.get('TOKEN_ISSUER') == iss else False
-
-
-def validate_client(aud):
-    """Validate the Client's ID on the token.
-
-    Args:
-        aud (string): Audience ID
-
-    Returns:
-        bool: True\False. True if the client is correct.
-    """
-    return True if os.environ.get('CLIENT_ID') == aud else False
-
-
-def token_expired(expire):
-    """Checks if a google tone is expired. Returns
-
-    Args:
-        expire (int): expiration time in unix epoch
-        
-    Returns:
-        bool: False | True. Returns "False" if token has not expired, otherwise True
-    """
-    exp = int(expire)
-    now = int(time.time())
-    return True if now > exp else False
-   
+ 
 
 def decode_token(token_object):
     """
@@ -108,11 +69,10 @@ def login():
         }), HTTP_400_BAD_REQUEST
     
     
-    issuer = validate_issuer(google_response.get('iss'))
-    valid_client = validate_client(google_response.get('aud'))
-    token_exp = token_expired(google_response.get('exp'))
-    
-    # breakpoint()
+    issuer = True if os.environ.get('TOKEN_ISSUER') == google_response.get('iss') else False
+    valid_client = True if os.environ.get('CLIENT_ID') == google_response.get('aud') else False
+    token_exp = True if time.time() > int(google_response.get('exp')) else False
+        
     
     if not issuer:
         return jsonify({
@@ -194,7 +154,7 @@ def login():
     user_profile = UserProfile.query.filter_by(id=new_user.id).first()
     if not user_profile:
         return jsonify({
-            "error": "this user doesn't have a profile."
+            'error': "this user doesn't have a profile."
             }), HTTP_404_NOT_FOUND
     
     return jsonify(get_user_info(user_profile.id)), HTTP_201_CREATED
