@@ -68,24 +68,19 @@ def login():
             'error': "invalid id_token"
         }), HTTP_400_BAD_REQUEST
     
-    
-    issuer = True if os.environ.get('TOKEN_ISSUER') == google_response.get('iss') else False
-    valid_client = True if os.environ.get('CLIENT_ID') == google_response.get('aud') else False
-    token_exp = True if time.time() > int(google_response.get('exp')) else False
-        
-    
-    if not issuer:
+    if not (os.environ.get('TOKEN_ISSUER') == google_response.get('iss')):
         return jsonify({
             'error': "bad id_token"
         }), HTTP_400_BAD_REQUEST
         
-    
-    if not valid_client:
+    if not (os.environ.get('CLIENT_ID') == google_response.get('aud')):
         return jsonify({
             'error': "bad id_token"
         }), HTTP_400_BAD_REQUEST
-        
-    if token_exp:
+    
+    # Compares the expiration time in the payload with the current time
+    # to determine if its expired or not.
+    if time.time() > google_response.get('exp'):
         return jsonify({
             'error': "expired id_token"
         }), HTTP_400_BAD_REQUEST
@@ -95,8 +90,6 @@ def login():
     first_name = google_response.get('given_name'),
     last_name = google_response.get('family_name')
     picture_url = google_response.get('picture')
-    
-    
     
     # Checks if payload contains email, first_name and last_name.
     if not email:
@@ -129,7 +122,7 @@ def login():
         
         return jsonify(get_user_info(user_exists.id)), HTTP_200_OK
 
-    # User doesn't exist yet, create user profile
+    # User does not exist yet, create user profile
     new_user = UserProfile(
         id=uuid.uuid4(),
         first_name=first_name,
@@ -154,7 +147,7 @@ def login():
     user_profile = UserProfile.query.filter_by(id=new_user.id).first()
     if not user_profile:
         return jsonify({
-            'error': "this user doesn't have a profile."
+            'error': "this user does not have a profile."
             }), HTTP_404_NOT_FOUND
     
     return jsonify(get_user_info(user_profile.id)), HTTP_201_CREATED
@@ -169,7 +162,7 @@ def get_user_info(uid):
     
     if not user_profile:
         return jsonify({
-            "error": "this user doesn't have a profile."
+            "error": "this user does not have a profile."
             }), HTTP_404_NOT_FOUND
     
     user_info = {
