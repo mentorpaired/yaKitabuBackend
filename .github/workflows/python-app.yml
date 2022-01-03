@@ -59,3 +59,14 @@ jobs:
         DATABASE_URL: ${{ secrets.DATABASE_URI}}
         EMAIL: ${{ secrets.EMAIL }}
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
+
+    - name: Run Migrations
+      run: |
+        flask db init 
+        flask db migrate  
+        flask db upgrade
+      env:
+        TEST_TOKEN: ${{ secrets.TEST_TOKEN }}
+        DATABASE_URL: ${{ secrets.DATABASE_URI}}
+        EMAIL: ${{ secrets.EMAIL }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
