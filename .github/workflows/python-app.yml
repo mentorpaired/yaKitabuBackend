@@ -62,7 +62,6 @@ jobs:
 
     - name: Run Migrations
       run: |
-        flask db init 
         flask db migrate  
         flask db upgrade
       env:
