@@ -8,7 +8,7 @@ from flasgger import Swagger
 
 from src.models import db
 from src.google import google_bp
-from src.manage import create_tables
+from src.manage import create_tables,generate_data
 from src.config.swagger import  template,swagger_config
 
 load_dotenv()
@@ -73,5 +73,6 @@ def create_app(test_config=None):
     
     # Customs command to crate table.
     app.cli.add_command(create_tables)
+    app.cli.add_command(generate_data)
     
     return app
