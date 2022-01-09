@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify
 from flasgger import swag_from
 
 from src.models import Book
@@ -12,16 +12,14 @@ books_bp = Blueprint('books', __name__, url_prefix='/api')
 @swag_from("./docs/books/available_books.yaml")
 def available_books():
 
-
     books = Book.query.filter_by(is_available=True)
 
     if len(list(books)) < 1:
-        
         return jsonify({
             "error": "no books are available"
-        }),HTTP_404_NOT_FOUND
+        }), HTTP_404_NOT_FOUND
 
-    books_object= list()
+    books_object = []
 
     for book in books:
         books_object.append({
@@ -31,5 +29,5 @@ def available_books():
             "category": book.category,
             "isbn": book.isbn
         })
-    
+
     return jsonify(books_object), HTTP_200_OK
