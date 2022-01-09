@@ -12,8 +12,7 @@ class TestBooks(TestCase):
     @mock.patch.dict(
         os.environ,
         {
-            "DATABASE_URL": "postgresql://postgres:<db password>"
-                            "@<host>:<port>/<db name>"
+            "DATABASE_URL": os.environ.get("DATABASE_URL")
         },
     )
     def test_valid_available_books(self, available_books):
