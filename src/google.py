@@ -68,14 +68,14 @@ def login():
             'error': "invalid id_token"
         }), HTTP_400_BAD_REQUEST
     
-    if not (os.environ.get('TOKEN_ISSUER') == google_response.get('iss')):
+    if os.environ.get('TOKEN_ISSUER') != google_response.get('iss'):
         return jsonify({
-            'error': "bad id_token"
+            'error': "invalid id_token"
         }), HTTP_400_BAD_REQUEST
         
-    if not (os.environ.get('CLIENT_ID') == google_response.get('aud')):
+    if os.environ.get('CLIENT_ID') != google_response.get('aud'):
         return jsonify({
-            'error': "bad id_token"
+            'error': "invalid id_token"
         }), HTTP_400_BAD_REQUEST
     
     # Compares the expiration time in the payload with the current time
