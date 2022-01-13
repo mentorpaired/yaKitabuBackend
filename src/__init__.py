@@ -27,14 +27,24 @@ def create_app(test_config=None):
     app: Flask = Flask(__name__, instance_relative_config=True)
     
     secret_key = os.environ.get('SECRET_KEY')
-    
     if secret_key is None:
         raise Exception("SECRET_KEY does not exist")
     
-    db_url = get_db_url()
     
+    db_url = get_db_url()
     if db_url is None:
         raise Exception("DATABASE_URL does not exist")
+    
+    
+    issuer = os.environ.get('TOKEN_ISSUER')
+    if issuer is None:
+        raise Exception("TOKEN_ISSUER does not exist")
+    
+
+    client = os.environ.get('CLIENT_ID')
+    if client is None:
+        raise Exception("CLIENT_ID does not exist")
+    
     
     if  not test_config:
         app.config.from_mapping(
