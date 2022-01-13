@@ -217,6 +217,10 @@ Please install and set up the following packages first. Upgrade if you find the 
   flask create_tables
   ```
 
+- Run seed data genertion. This will generate some data on your local postgresql database for testing purposes. The argument `NUMBER` indicates the amount of seed data to be generated. `NUMBER = 1` will generate 2 User profiles (1 Borrower and 1 Lender),  2 Books (the first Book is borrowed, while second Book is available for loan).
+  ```sh
+  flask generate_data [NUMBER]
+  ```
 - To run the testcases covering various functionalities, run the following command in terminal
   ```sh
   python -m unittest -v
