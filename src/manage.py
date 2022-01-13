@@ -1,4 +1,5 @@
 import click
+from tqdm import tqdm
 from flask.cli import with_appcontext
 
 from src import db
@@ -19,12 +20,21 @@ def create_tables():
 @click.command(name='generate_data')
 @click.argument("number", required=True, type=int)
 @with_appcontext
-def generate_data(number):    
-    for _ in range(int(number)):
-        new_user, user_login, author, book, borrow, = generate_seed_data()
-        db.session.add(author)
-        db.session.add(new_user)
-        db.session.add(user_login)
-        db.session.add(book)
-        db.session.add(borrow)
+def generate_data(number):  
+    """Generate seed data in staging and local database for testing purposes
+       number = 1 will generate 2 User profiles (1 borrower and 1 lender), 
+       2 books (the first book is borrowed, while second book will be available for loan)) and 1 
+    Args:
+        number (int):   number of seed data to generate. 
+                        number=1 will generate 2 
+                        
+    """
+    print("Generating seed data for testing purposes")
+    for _ in tqdm(range(number)):
+        objects = generate_seed_data()
+        for item in objects:
+            db.session.add(item)
+            print(f"Generating: {item}")
+            print("==================")
     db.session.commit()
+    print(f"Succesfully generated {number*2}:User Profiles, {number*2}:Books, {number*2}:Authors and {number}:book(s) borrowed")
