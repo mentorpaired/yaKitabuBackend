@@ -1,11 +1,11 @@
 import uuid
 import random
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from faker import Faker
 from werkzeug.security import generate_password_hash
 
-from src.models import Author, Book, UserProfile, UserLogin
+from src.models import Author, Book, Borrow, UserProfile, UserLogin
 
 
 faker = Faker(['en_CA', 'en_AU', 'en_GB', 'de_DE', 'en_US'])
@@ -50,9 +50,20 @@ def generate_seed_data():
         owner_id=new_user.id,
         created_at=datetime.now()
     )
+    borrow = Borrow(
+        id = uuid.uuid4(),
+        borrowed_date=datetime.now(),
+        deadline=datetime.now() + timedelta(days=5),
+        points_used=random.choice([5,10,15,20,30]),
+        book_id = book.id,
+        borrower = new_user.id,
+        created_at = datetime.now()        
+    )
+    book.is_available=False
+    
     print(new_user)
     print(user_login)
     print(author)
     print(book)
     print('=======================')
-    return new_user, user_login, author, book
+    return new_user, user_login, author, book, borrow

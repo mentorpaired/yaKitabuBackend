@@ -21,9 +21,10 @@ def create_tables():
 @with_appcontext
 def generate_data(number):    
     for _ in range(int(number)):
-        new_user, user_login, author, book = generate_seed_data()
+        new_user, user_login, author, book, borrow, = generate_seed_data()
         db.session.add(author)
         db.session.add(new_user)
         db.session.add(user_login)
         db.session.add(book)
+        db.session.add(borrow)
     db.session.commit()
