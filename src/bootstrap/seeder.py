@@ -9,7 +9,6 @@ from src.models import Author, Book, Borrow, UserProfile, UserLogin
 
 
 faker = Faker(['en_CA', 'en_AU', 'en_GB', 'de_DE', 'en_US'])
-# Faker.seed(random.randint())
 
 book_categories = ['adventure', 'humor', 'philosophy', 'science', 'drama', 'psychology', 'tech'
                    'religion', 'politics', 'action', 'travel', 'comedy', 'self-help']
@@ -17,7 +16,7 @@ languages = ['english', 'french', 'german']
 
 
 def generate_seed_data():
-    # A User who's book was borrowed
+    # A User whose book was borrowed
     user_lender = UserProfile(
         id=uuid.uuid4(),
         first_name=faker.first_name(),
