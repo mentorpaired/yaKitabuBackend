@@ -14,6 +14,14 @@ def create_tables():
     db.create_all()
 
 
+# Custom command to drop and recreate the tables
+@click.command(name='drop_create_tables')
+@with_appcontext
+def drop_create():
+    db.drop_all()
+    db.create_all()
+
+
 # This enables the generation of seed data into the local and staging db.
 # To generate seed, user needs to run `flask generate_data [number]` in the terminal
 # `number` represents the number of seed data to generate.

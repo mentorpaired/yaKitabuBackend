@@ -8,7 +8,7 @@ from flasgger import Swagger
 
 from src.models import db
 from src.google import google_bp
-from src.manage import create_tables,generate_data
+from src.manage import create_tables,generate_data, drop_create
 from src.config.swagger import  template,swagger_config
 
 load_dotenv()
@@ -71,8 +71,9 @@ def create_app(test_config=None):
     # Register blueprints.
     app.register_blueprint(google_bp)
     
-    # Customs command to crate table.
+    # Customs commands.
     app.cli.add_command(create_tables)
     app.cli.add_command(generate_data)
+    app.cli.add_command(drop_create)
     
     return app
