@@ -5,9 +5,11 @@ from flask import Flask
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 from flasgger import Swagger
+import cloudinary
 
 from src.models import db
 from src.google import google_bp
+from src.book import book_bp
 from src.manage import create_tables
 from src.config.swagger import  template,swagger_config
 
@@ -46,6 +48,18 @@ def create_app(test_config=None):
         raise Exception("CLIENT_ID does not exist")
     
     
+    cld_name = os.environ.get('CLD_CLOUD_NAME')
+    cld_api_key = os.environ.get('CLD_CLOUDINARY_API_KEY')
+    cld_secret = os.environ.get('CLD_CLOUDINARY_SECRET')
+    
+    # Check if any of the cloudinary envs are not set.
+    if not (cld_name and cld_api_key and cld_secret):
+         raise Exception("One or more Cloudinary credentials are missing")
+     
+    cloudinary.config(cloud_name = cld_name, api_key=cld_api_key, 
+                      api_secret=cld_secret)
+    
+    
     if  not test_config:
         app.config.from_mapping(
             SECRET_KEY=secret_key,
@@ -70,6 +84,7 @@ def create_app(test_config=None):
 
     # Register blueprints.
     app.register_blueprint(google_bp)
+    app.register_blueprint(book_bp)
     
     # Customs command to crate table.
     app.cli.add_command(create_tables)
