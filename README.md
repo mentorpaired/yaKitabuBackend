@@ -218,9 +218,8 @@ Please install and set up the following packages first. Upgrade if you find the 
   ```
 
 - Seed data generation. This will generate some data on your local postgresql database for testing purposes. The argument `NUMBER` indicates the amount of seed data to be generated. `NUMBER = 1` will generate 2 User profiles (1 Borrower and 1 Lender),  2 Books (the first Book is borrowed, while second Book is available for loan).
-This command will also generate seed data on your heroku database if you execute this command on heroku's console.\
-\
-Note: The database need to be have been created and the `DATABASE_URL` environment variable is set in your [.env](https://github.com/mentorpaired/yakitabu-backend/blob/staging/.env.example) file.
+This command will also generate seed data on your heroku database if you execute this command on heroku's console.
+Note: The database needs to be have been created and the `DATABASE_URL` environment variable is set in your `.env` file.
   ```sh
   flask generate_data [NUMBER]
   ```

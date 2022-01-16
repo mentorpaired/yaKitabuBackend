@@ -71,7 +71,7 @@ def create_app(test_config=None):
     # Register blueprints.
     app.register_blueprint(google_bp)
     
-    # Customs commands.
+    # Custom commands.
     app.cli.add_command(create_tables)
     app.cli.add_command(generate_data)
     app.cli.add_command(drop_create)
