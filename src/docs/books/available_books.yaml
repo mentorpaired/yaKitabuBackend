@@ -5,7 +5,7 @@ tags:
 parameters:
   - in: header
     name: Authorization
-    required: true
+    required: false
           
 responses:
   200:
