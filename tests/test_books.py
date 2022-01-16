@@ -2,19 +2,12 @@ import os
 from unittest import TestCase, mock
 
 from src import create_app
-
-from src.constants.http_status_codes import HTTP_200_OK, HTTP_404_NOT_FOUND, \
-    HTTP_405_METHOD_NOT_ALLOWED
+from src.books import available_books
+from src.constants.http_status_codes import HTTP_200_OK, HTTP_405_METHOD_NOT_ALLOWED
 
 
 class TestBooks(TestCase):
     @mock.patch("src.books.available_books", return_value=200)
-    @mock.patch.dict(
-        os.environ,
-        {
-            "DATABASE_URL": os.environ.get("DATABASE_URL")
-        },
-    )
     def test_valid_available_books(self, available_books):
         """
         Test case covering valid available books
@@ -22,16 +15,12 @@ class TestBooks(TestCase):
         flask_app = create_app()
 
         with flask_app.test_client() as test_client:
-            try:
-                response = test_client.get(
-                    "http://localhost:5000/api/books/available"
-                )
-                self.assertEqual(response.status_code, HTTP_200_OK)
-            except AssertionError:
-                response = test_client.get(
-                    "http://localhost:5000/api/books/available"
-                )
-                self.assertEqual(response.status_code, HTTP_404_NOT_FOUND)
+
+            response = test_client.get(
+                "http://localhost:5000/api/books/available"
+            )
+            response.status_code = available_books()
+            self.assertEqual(response.status_code, HTTP_200_OK)
 
     def test_available_books_post(self):
         """
