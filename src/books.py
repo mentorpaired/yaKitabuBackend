@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify
 from flasgger import swag_from
 
 from src.models import Book
-from src.constants.http_status_codes import HTTP_200_OK, HTTP_404_NOT_FOUND
+from src.constants.http_status_codes import HTTP_200_OK
 
 
 books_bp = Blueprint('books', __name__, url_prefix='/api')
@@ -13,11 +13,6 @@ books_bp = Blueprint('books', __name__, url_prefix='/api')
 def available_books():
 
     books = Book.query.filter_by(is_available=True)
-
-    if len(list(books)) < 1:
-        return jsonify({
-            "error": "no books are available"
-        }), HTTP_404_NOT_FOUND
 
     books_object = []
 
