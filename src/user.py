@@ -1,6 +1,6 @@
 from os import access
 import uuid
-import logging
+import re
 from datetime import datetime
 
 from flask_jwt_extended.utils import get_jwt_identity
@@ -28,22 +28,22 @@ def signup():
     
     if 'first_name' not in request.json:
         return jsonify({
-            'error': "'first_name' is missing from request"
+            'error': "first_name is missing from request"
         }), HTTP_400_BAD_REQUEST
         
     if 'last_name' not in request.json:
         return jsonify({
-            'error': "'last_name' is missing from request"
+            'error': "last_name is missing from request"
         }), HTTP_400_BAD_REQUEST
     
     if 'email' not in request.json:
         return jsonify({
-            'error': "'email' is missing from request"
+            'error': "email is missing from request"
         }), HTTP_400_BAD_REQUEST
     
     if 'password' not in request.json:
         return jsonify({
-            'error': "'password' is missing from request"
+            'error': "password is missing from request"
         }), HTTP_400_BAD_REQUEST
         
     first_name = request.json['first_name']
@@ -53,18 +53,23 @@ def signup():
     
     if len(password) < 8:
         return jsonify({
-            'error': "'password' is too short"
+            'error': "password is too short"
         }), HTTP_400_BAD_REQUEST
     
     if not validators.email(email):
         return jsonify({
-            'error': "'email' is invalid"
+            'error': "email is invalid"
         }), HTTP_400_BAD_REQUEST
         
+    if not validate_password_complexity(password):
+         return jsonify({
+             'error': "password should be at least 8 characters long and it contain minimum one lower case, one uppercase and one special character"
+        }), HTTP_400_BAD_REQUEST
+         
     # Check if email is taken    
     if UserProfile.query.filter_by(email=email).first() is not None:
         return jsonify({
-            'error': "'email' is already taken"
+            'error': "account with this email already exists"
         }), HTTP_409_CONFLIT
         
     password_hash = generate_password_hash(password)
@@ -107,12 +112,12 @@ def login():
     
     if 'email' not in request.json:
         return jsonify({
-            'error': "'email' cannot be blank"
+            'error': "email cannot be blank"
         }), HTTP_400_BAD_REQUEST
         
     if 'password' not in request.json:
         return jsonify({
-            'error': "'password' is missing"
+            'error': "password is missing"
         }), HTTP_400_BAD_REQUEST
     
     email = request.json['email']
@@ -120,14 +125,14 @@ def login():
     
     if not validators.email(email):
         return jsonify({
-            'error': "'email' is invalid"
+            'error': "email is invalid"
         }), HTTP_400_BAD_REQUEST
 
     # check if user exists
     usr = UserProfile.query.filter_by(email=email).first()
     if not usr:
         return jsonify({
-            'error': "'user' is invalid"
+            'error': "user is invalid"
         }), HTTP_401_UNAUTHORIZED
     
     user_login = UserLogin.query.filter_by(user_profile_id=usr.id).first()
@@ -151,3 +156,22 @@ def login():
         return jsonify(user_info), HTTP_200_OK
     
     return jsonify({'error':'incorrect password'}), HTTP_401_UNAUTHORIZED
+
+
+def validate_password_complexity(password):
+    """Checks password complexity
+    
+    Passwords:
+        Should have at least one number.
+        Should have at least one uppercase and one lowercase character.
+        Should have at least one special symbol.
+        Should be at least 8 characters long.
+        
+    Args:
+        password (string): [description]
+
+    Returns:
+        boolean: true if the conditions are met, false otherwise.
+    """
+    pattern = re.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&.,()]{8,}$")
+    return re.search(pattern, password)
