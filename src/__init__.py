@@ -8,9 +8,9 @@ from flasgger import Swagger
 
 from src.models import db
 from src.google import google_bp
+from src.user import user_bp
 from src.manage import create_tables,generate_data, drop_create
 from src.config.swagger import  template,swagger_config
-from src.user import user_bp
 
 load_dotenv()
 
