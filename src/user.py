@@ -1,16 +1,15 @@
-from os import access
-import uuid
 import re
+import uuid
 from datetime import datetime
 
-from flask_jwt_extended.utils import get_jwt_identity
-
 import validators
+from flasgger import swag_from
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended.utils import get_jwt_identity
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from src.models import UserLogin, UserProfile, db
 from src.google import get_user_info
+from src.models import UserLogin, UserProfile, db
 from src.constants.http_status_codes import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED, HTTP_409_CONFLIT
 
 
@@ -19,6 +18,7 @@ user_bp = Blueprint('user', __name__, url_prefix='/api')
 
 
 @user_bp.post('/login/user/signup')
+@swag_from('./docs/signup/user.yml')
 def signup():
     """Endpoint for user signup
 
@@ -50,11 +50,6 @@ def signup():
     last_name = request.json['last_name']
     email = request.json['email']
     password = request.json['password']
-    
-    if len(password) < 8:
-        return jsonify({
-            'error': "password is too short"
-        }), HTTP_400_BAD_REQUEST
     
     if not validators.email(email):
         return jsonify({
@@ -103,6 +98,7 @@ def signup():
 
 
 @user_bp.post('/login/user')
+@swag_from('./docs/login/user.yml')
 def login():
     """Login endpoint
 
