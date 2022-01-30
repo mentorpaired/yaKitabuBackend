@@ -19,11 +19,11 @@ book_bp = Blueprint('book', __name__, url_prefix='/api')
 @swag_from('./docs/book/create.yml')
 def create_book():
     file = request.files['image']
-
+    
     # Author    
     author_first_name = request.form['author_first_name']
     author_last_name = request.form['author_last_name']
-
+    
     # Book
     title = request.form['title']
     isbn = request.form['isbn']
@@ -36,7 +36,7 @@ def create_book():
         return jsonify({
             'error': "book's title missing"
         }), HTTP_400_BAD_REQUEST
-
+        
     if not language:
         return jsonify({
             'error': "book title is required"
@@ -46,18 +46,17 @@ def create_book():
         return jsonify({
             'error': "book owner is required"
         }), HTTP_400_BAD_REQUEST
-    
+        
     if not year_of_publication:
         return jsonify({
             'error': "year of publication is required"
         }), HTTP_400_BAD_REQUEST
-    
+        
     if not (author_first_name and author_last_name):
         return jsonify({
             'error': "author's first and last name is required"
         }), HTTP_400_BAD_REQUEST
         
-
     # Upload image to cloudinary server
     cloudinary_response = upload(file, folder="yakitabu-books")
     
@@ -65,12 +64,12 @@ def create_book():
         return jsonify({
             'error': "error uploading image"
         }), HTTP_400_BAD_REQUEST
-
+        
     author = Author(
         id=uuid.uuid4(),
         first_name=author_first_name,
         last_name=author_last_name)
-
+    
     book = Book(
         id=uuid.uuid4(),
         name=title,
@@ -91,4 +90,6 @@ def create_book():
     db.session.add(book)
     db.session.commit()
     
+    return cloudinary_response
+
     return {"message":"book created"}, HTTP_201_CREATED
