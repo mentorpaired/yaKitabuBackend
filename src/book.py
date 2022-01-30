@@ -3,6 +3,7 @@ import os
 import logging
 from datetime import datetime
 
+from flasgger import swag_from
 from flask import Blueprint, jsonify, request
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
@@ -15,18 +16,13 @@ book_bp = Blueprint('book', __name__, url_prefix='/api')
 
 
 @book_bp.post('/books')
+@swag_from('./docs/book/create.yml')
 def create_book():
     file = request.files['image']
-    if not file:
-        return jsonify({
-            'error': "book image missing"
-        }), HTTP_400_BAD_REQUEST
 
-
-    # Author
-    book_author = request.form['author'].split(' ')
-    author_first_name = book_author[0]
-    author_last_name = ' '.join(book_author[1:])
+    # Author    
+    author_first_name = request.form['author_first_name']
+    author_last_name = request.form['author_last_name']
 
     # Book
     title = request.form['title']
@@ -43,27 +39,27 @@ def create_book():
 
     if not language:
         return jsonify({
-            'error': "book's language missing"
+            'error': "book title is required"
         }), HTTP_400_BAD_REQUEST
         
     if not owner_id:
         return jsonify({
-            'error': "book's owner missing"
+            'error': "book owner is required"
         }), HTTP_400_BAD_REQUEST
     
     if not year_of_publication:
         return jsonify({
-            'error': "book's year of publication missing"
+            'error': "year of publication is required"
         }), HTTP_400_BAD_REQUEST
     
     if not (author_first_name and author_last_name):
         return jsonify({
-            'error': "author's name missing"
+            'error': "author's first and last name is required"
         }), HTTP_400_BAD_REQUEST
         
 
     # Upload image to cloudinary server
-    cloudinary_response = upload(file, folder="bookie-books")
+    cloudinary_response = upload(file, folder="yakitabu-books")
     
     if not cloudinary_response:
         return jsonify({
@@ -85,6 +81,8 @@ def create_book():
         author_id=author.id,
         owner_id=uuid.UUID(owner_id),
         url = cloudinary_response['url'], # from cloudinary response after successful upload
+        cld_asset_id=cloudinary_response['asset_id'],
+        cld_public_id=cloudinary_response['public_id'],
         is_available=True,
         created_at=datetime.now(),
         borrowed=False # Not borrowed on creation

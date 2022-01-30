@@ -1,0 +1,96 @@
+Book Creation
+---
+tags:
+  - Books
+consumes:
+- multipart/form-data
+produces:
+- application/json
+
+parameters:
+  - name: title
+    description: "Title of the Book"
+    in: "formData"
+    required: true
+    type: string
+  
+  - name: isbn
+    in: "formData"
+    description: The Book's ISBN
+    required: false
+    type: string
+
+  - name: author_first_name
+    in: "formData"
+    description: Author's First Name
+    required: true
+    type: string
+
+- name: author_last_name
+    in: "formData"
+    description: Author's Last Name
+    required: true
+    type: string
+
+  - name: year_of_publication
+    in: "formData"
+    description: year of publication
+    required: true
+    type: integer
+
+  - name: language
+    in: formData
+    description: The book's Language.
+    required: true
+    type: string
+
+  - name: category
+    in: formData
+    description: Category of the book.
+    required: false
+    type: string
+
+  - name: owner_id
+    in: formData
+    description: Unique's ID of the owner (UUID).
+    required: true
+    type: string
+
+  - name: image
+    in: formData
+    description: "Book Image"
+    required: false
+    type: "file"
+
+responses:
+ 
+  201:
+    description: New Book is uploaded and created.
+
+  400:
+    description: Unable to create book.
+
+# Google Authentication
+# ---
+# tags:
+#   - Authentication
+# parameters:
+#   - name: body
+#     description: The body should contain the user's id_token
+#     in: body
+#     required: true
+#     schema:
+#       type: object
+#       required:
+#         - "id_token"
+#       properties:
+#         id_token:
+#           type: "string"
+#           example: "Some.TOken.String"
+          
+responses:
+  201:
+    description: New account is created and user successfully logs in.
+
+  400:
+    description: Fails to login due to bad request data.

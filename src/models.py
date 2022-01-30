@@ -75,7 +75,9 @@ class Book(db.Model):
     is_available = db.Column(db.Boolean, default=True)
     loan_points = db.Column(db.Integer)
     url = db.Column(db.String)
-
+    cld_asset_id = db.Column(db.String)
+    cld_public_id = db.Column(db.String)
+    
     book = db.relationship("Borrow", backref="book", lazy=True)
     
     def __init__(self, **kwargs):
