@@ -1,4 +1,4 @@
-Book Creation
+Save Books
 ---
 tags:
   - Books
@@ -26,9 +26,9 @@ parameters:
     required: true
     type: string
 
-- name: author_last_name
+  - name: author_last_name
     in: "formData"
-    description: Author's Last Name
+    description: Author's First Name
     required: true
     type: string
 
@@ -69,28 +69,3 @@ responses:
 
   400:
     description: Unable to create book.
-
-# Google Authentication
-# ---
-# tags:
-#   - Authentication
-# parameters:
-#   - name: body
-#     description: The body should contain the user's id_token
-#     in: body
-#     required: true
-#     schema:
-#       type: object
-#       required:
-#         - "id_token"
-#       properties:
-#         id_token:
-#           type: "string"
-#           example: "Some.TOken.String"
-          
-responses:
-  201:
-    description: New account is created and user successfully logs in.
-
-  400:
-    description: Fails to login due to bad request data.

@@ -80,7 +80,7 @@ def create_book():
         category=category,
         author_id=author.id,
         owner_id=uuid.UUID(owner_id),
-        url = cloudinary_response['url'], # from cloudinary response after successful upload
+        url = cloudinary_response['secure_url'], # from cloudinary response after successful upload
         cld_asset_id=cloudinary_response['asset_id'],
         cld_public_id=cloudinary_response['public_id'],
         is_available=True,
