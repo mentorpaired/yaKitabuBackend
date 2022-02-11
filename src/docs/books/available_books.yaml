@@ -11,8 +11,3 @@ responses:
   200:
     description: A user can get available books.
 
-  400:
-    description: Bad request data.
-
-  404:
-    description: There are no available books.
