@@ -54,6 +54,7 @@ jobs:
         EMAIL: ${{ secrets.EMAIL }}
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
       run: |
+
           flask db stamp head
           flask db migrate  
           flask db upgrade
