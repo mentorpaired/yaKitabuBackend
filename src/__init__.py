@@ -1,5 +1,4 @@
 import os
-import json
 
 from flask import Flask
 from flask_migrate import Migrate
@@ -8,6 +7,7 @@ from flasgger import Swagger
 
 from src.models import db
 from src.google import google_bp
+from src.user import user_bp
 from src.manage import create_tables,generate_data, drop_create
 from src.config.swagger import  template,swagger_config
 
@@ -58,8 +58,8 @@ def create_app(test_config=None):
             },
         )
     else:
-       app.config.from_mapping(test_config)
-       
+        app.config.from_mapping(test_config)
+
     # Initializations.
     db.app = app
     db.init_app(app)
@@ -70,6 +70,7 @@ def create_app(test_config=None):
 
     # Register blueprints.
     app.register_blueprint(google_bp)
+    app.register_blueprint(user_bp)
     
     # Custom commands.
     app.cli.add_command(create_tables)

@@ -1,0 +1,39 @@
+User Registration
+---
+tags:
+  - SignUp
+parameters:
+  - name: body
+    description: The body should contain the user Registration data
+    in: body
+    required: true
+    schema:
+      type: object
+      required:
+        - "first_name"
+        - "last_name"
+        - "email"
+        - "password"
+      properties:
+        first_name:
+          type: "string"
+          example: "John"
+        last_name:
+          type: "string"
+          example: "Doe"
+        email:
+          type: "email"
+          example: "email@mail.com"
+        password:
+          type: "string"
+          format: password
+          example: "********"
+responses:
+  201:
+    description: When a user successfully registers and sign in
+
+  400:
+    description: Fails to register due to bad request (first_name, last_name, email or password complexity requirements are not me.)
+
+  409:
+    description: The Email is already taken
