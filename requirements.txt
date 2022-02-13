@@ -6,6 +6,7 @@ certifi==2021.10.8
 cffi==1.15.0
 charset-normalizer==2.0.7
 click==7.1.2
+cloudinary==1.28.1
 cryptography==35.0.0
 decorator==5.1.0
 Faker==11.1.0
