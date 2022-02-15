@@ -19,7 +19,6 @@ class TestBooks(TestCase):
             response = test_client.get(
                 "http://localhost:5000/api/books/available"
             )
-            response.status_code = available_books()
             self.assertEqual(response.status_code, HTTP_200_OK)
 
     def test_when_no_books_are_available(self):
@@ -29,11 +28,9 @@ class TestBooks(TestCase):
         flask_app = create_app()
 
         with flask_app.test_client() as test_client:
-
             response = test_client.get(
                 "http://localhost:5000/api/books/available"
-            )
-            response.status_code = []
+            )        
             self.assertEqual(response.status_code, HTTP_200_OK)
 
     def test_available_books_post(self):
