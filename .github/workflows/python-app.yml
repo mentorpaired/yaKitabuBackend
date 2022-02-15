@@ -10,6 +10,7 @@ on:
     branches: [ staging, main ]
   workflow_dispatch:
 
+
 jobs:
   build:
 
@@ -71,3 +72,4 @@ jobs:
         fields: |
           [{ "title": "Repository", "value": "${env.GITHUB_REPOSITORY}", "short": true },
           { "title": "Branch", "value": "${env.GITHUB_REF}", "short": true }]
+

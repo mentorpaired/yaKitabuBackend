@@ -217,6 +217,12 @@ Please install and set up the following packages first. Upgrade if you find the 
   flask create_tables
   ```
 
+- Seed data generation. This will generate some data on your local postgresql database for testing purposes. The argument `NUMBER` indicates the amount of seed data to be generated. `NUMBER = 1` will generate 2 User profiles (1 Borrower and 1 Lender),  2 Books (the first Book is borrowed, while second Book is available for loan).
+This command will also generate seed data on your heroku database if you execute this command on heroku's console.
+Note: You will need to create the database and update the `DATABASE_URL` entry in your `.env` file.
+  ```sh
+  flask generate_data [NUMBER]
+  ```
 - To run the testcases covering various functionalities, run the following command in terminal
   ```sh
   python -m unittest -v
