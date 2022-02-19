@@ -7,12 +7,10 @@ from datetime import datetime
 from flasgger import swag_from
 from flask import Blueprint, jsonify, request
 from cloudinary.uploader import upload
-from cloudinary.utils import cloudinary_url
-import cloudinary
 
 from src.models import Author, Book,  db
 from src.google import get_user_info
-from src.constants.http_status_codes import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
+from src.constants.http_status_codes import HTTP_201_CREATED, HTTP_400_BAD_REQUEST,HTTP_400_BAD_REQUEST, HTTP_500_INTERNAL_SERVER_ERROR
 
 book_bp = Blueprint('book', __name__, url_prefix='/api')
 
@@ -61,13 +59,11 @@ def create_book():
         
     
     try:
-        
         # Upload image to cloudinary server
         cloudinary_response = upload(file, folder="yakitabu-books")
     except Exception as ex:
-        return({'error':ex})
+        return({'error':"error uploading image to cloudinary"}, HTTP_500_INTERNAL_SERVER_ERROR)
         
-    
     if not cloudinary_response:
         return jsonify({
             'error': "error uploading image"
