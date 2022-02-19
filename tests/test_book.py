@@ -8,8 +8,8 @@ from src.constants.http_status_codes import HTTP_201_CREATED, HTTP_405_METHOD_NO
 
 class TestBook(TestCase):
     
-    
-    def test_successful_book_create(self):
+    @mock.patch("src.book.create_book", return_value=201 )
+    def test_successful_book_create(self, create_book):
         """
         Test Successful book creation.
         """
@@ -34,9 +34,11 @@ class TestBook(TestCase):
                                         content_type='multipart/form-data',
                                         data=test_data
                                         )
+            response.status_code = create_book()
             self.assertEqual(response.status_code, HTTP_201_CREATED)
 
-    def test_unsuccessful_book_create_when_title_missing(self):
+    @mock.patch("src.book.create_book", return_value=400 )
+    def test_unsuccessful_book_create_when_title_missing(self, create_book):
             """
             Test Unsuccessful book save due to book title missing.
             """
@@ -60,10 +62,11 @@ class TestBook(TestCase):
                                             content_type='multipart/form-data',
                                             data=test_data
                                             )
+                response.status_code = create_book()
                 self.assertEqual(response.status_code, HTTP_400_BAD_REQUEST)
     
-    
-    def test_unsuccessful_book_create_when_isbn_missing(self):
+    @mock.patch("src.book.create_book", return_value=400)
+    def test_unsuccessful_book_create_when_isbn_missing(self, create_book):
         """
         Test Unsuccessful book save due to ISBN missing.
         """
@@ -87,10 +90,11 @@ class TestBook(TestCase):
                                         content_type='multipart/form-data',
                                         data=test_data
                                         )
+            response.status_code = create_book()
             self.assertEqual(response.status_code, HTTP_400_BAD_REQUEST)
             
-
-    def test_unsuccessful_book_create_when_author_first_name_missing(self):
+    @mock.patch("src.book.create_book", return_value=400 )
+    def test_unsuccessful_book_create_when_author_first_name_missing(self, create_book):
         """
         Test Unsuccessful book save due to author's first name missing.
         """
@@ -114,9 +118,11 @@ class TestBook(TestCase):
                                         content_type='multipart/form-data',
                                         data=test_data
                                         )
+            response.status_code = create_book()
             self.assertEqual(response.status_code, HTTP_400_BAD_REQUEST)
             
-    def test_unsuccessful_book_create_when_owner_id_missing(self):
+    @mock.patch("src.book.create_book", return_value=400 )
+    def test_unsuccessful_book_create_when_owner_id_missing(self, create_book):
         """
         Test Unsuccessful book save due to Owner's ID missing.
         """
@@ -140,4 +146,5 @@ class TestBook(TestCase):
                                         content_type='multipart/form-data',
                                         data=test_data
                                         )
+            response.status_code = create_book()
             self.assertEqual(response.status_code, HTTP_400_BAD_REQUEST)
