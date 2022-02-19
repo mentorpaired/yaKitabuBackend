@@ -19,8 +19,8 @@ class TestBook(TestCase):
         test_data = {
             'image':(image,'yakitabu-logo.png'),
             'title': 'How not to learn German',
-            'author_first_name': 'Tim',
             'isbn':'12-3434-J1002',
+            'author_first_name': 'Tim',
             'author_last_name': 'Lahaye',
             'language':'EN',
             'year_of_publication': 2002,

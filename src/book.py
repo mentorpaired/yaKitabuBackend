@@ -8,9 +8,9 @@ from flasgger import swag_from
 from flask import Blueprint, jsonify, request
 from cloudinary.uploader import upload
 
-from src.models import Author, Book,  db
+from src.models import Author, Book, UserProfile, db
 from src.google import get_user_info
-from src.constants.http_status_codes import HTTP_201_CREATED, HTTP_400_BAD_REQUEST,HTTP_400_BAD_REQUEST, HTTP_500_INTERNAL_SERVER_ERROR
+from src.constants.http_status_codes import HTTP_201_CREATED, HTTP_400_BAD_REQUEST,HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR
 
 book_bp = Blueprint('book', __name__, url_prefix='/api')
 
@@ -47,6 +47,12 @@ def create_book():
             'error': "book owner is required"
         }), HTTP_400_BAD_REQUEST
         
+    owner = UserProfile.query.filter_by(id=owner_id).first()
+    if not owner:
+        return jsonify({
+            'error':f"user with id {owner_id} not found"
+        }), HTTP_404_NOT_FOUND
+        
     if not year_of_publication:
         return jsonify({
             'error': "year of publication is required"
@@ -82,7 +88,7 @@ def create_book():
         year_of_publication=year_of_publication,
         category=category,
         author_id=author.id,
-        owner_id=uuid.UUID(owner_id),
+        owner_id=uuid.UUID(owner.id),
         image_url = cloudinary_response['secure_url'], # from cloudinary response after successful upload
         cld_asset_id=cloudinary_response['asset_id'],
         cld_public_id=cloudinary_response['public_id'],
