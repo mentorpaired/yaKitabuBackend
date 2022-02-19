@@ -1,3 +1,4 @@
+
 import uuid
 import os
 import logging
@@ -7,6 +8,7 @@ from flasgger import swag_from
 from flask import Blueprint, jsonify, request
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
+import cloudinary
 
 from src.models import Author, Book,  db
 from src.google import get_user_info
@@ -34,12 +36,12 @@ def create_book():
     
     if not title:
         return jsonify({
-            'error': "book's title missing"
+            'error': "book title is required"
         }), HTTP_400_BAD_REQUEST
         
     if not language:
         return jsonify({
-            'error': "book title is required"
+            'error': "book language is required"
         }), HTTP_400_BAD_REQUEST
         
     if not owner_id:
@@ -57,8 +59,14 @@ def create_book():
             'error': "author's first and last name is required"
         }), HTTP_400_BAD_REQUEST
         
-    # Upload image to cloudinary server
-    cloudinary_response = upload(file, folder="yakitabu-books")
+    
+    try:
+        
+        # Upload image to cloudinary server
+        cloudinary_response = upload(file, folder="yakitabu-books")
+    except Exception as ex:
+        return({'error':ex})
+        
     
     if not cloudinary_response:
         return jsonify({
@@ -79,7 +87,7 @@ def create_book():
         category=category,
         author_id=author.id,
         owner_id=uuid.UUID(owner_id),
-        url = cloudinary_response['secure_url'], # from cloudinary response after successful upload
+        image_url = cloudinary_response['secure_url'], # from cloudinary response after successful upload
         cld_asset_id=cloudinary_response['asset_id'],
         cld_public_id=cloudinary_response['public_id'],
         is_available=True,
@@ -90,6 +98,4 @@ def create_book():
     db.session.add(book)
     db.session.commit()
     
-    return cloudinary_response
-
     return {"message":"book created"}, HTTP_201_CREATED
