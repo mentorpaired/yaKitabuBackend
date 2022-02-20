@@ -58,7 +58,7 @@ jobs:
         python -m unittest
       env:
         TEST_TOKEN: ${{ secrets.TEST_TOKEN }}
-        DATABASE_URL: ${{ secrets.DATABASE_URI}}
+        DATABASE_URL: ${{ secrets.DATABASE_URL}}
         EMAIL: ${{ secrets.EMAIL }}
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
         CLIENT_ID: ${{ secrets.CLIENT_ID}}
