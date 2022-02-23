@@ -10,6 +10,7 @@ from src.models import db
 from src.google import google_bp
 from src.manage import create_tables,generate_data, drop_create
 from src.config.swagger import  template,swagger_config
+from src.books import books_bp
 
 load_dotenv()
 
@@ -70,6 +71,7 @@ def create_app(test_config=None):
 
     # Register blueprints.
     app.register_blueprint(google_bp)
+    app.register_blueprint(books_bp)
     
     # Custom commands.
     app.cli.add_command(create_tables)

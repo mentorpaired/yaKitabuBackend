@@ -1,0 +1,15 @@
+Available Books
+---
+tags:
+  - Books
+parameters:
+  - in: header
+    name: Authorization
+    required: false
+          
+responses:
+  200:
+    description: A user can get available books.
+
+  500:
+    description: Internal Server Error.
