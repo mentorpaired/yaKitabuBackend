@@ -6,6 +6,16 @@ parameters:
   - in: header
     name: Authorization
     required: false
+
+  - in: query
+    name: page
+    type: integer
+    description: The page to be displayed.
+
+  - in: query
+    name: per_page
+    type: integer
+    description: The numbers of items to be displayed.
           
 responses:
   200:
