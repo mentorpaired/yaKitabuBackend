@@ -58,7 +58,7 @@ def signup():
         
     if not validate_password_complexity(password):
         return jsonify({
-            'error': "password should be at least 8 characters long and it contain minimum one lower case, one uppercase and one special character"
+            'error': "password should be at least 8 characters long and must contain minimum one lower case, one uppercase and one special character"
         }), HTTP_400_BAD_REQUEST
         
     # Check if email is taken    
@@ -139,7 +139,6 @@ def login():
         pwhash=user_login.password_hash,
         password=password)
     if is_valid_pass:
-        
         # TODO: Create access and refresh tokens.
         
         user_info =  get_user_info(usr.id)
@@ -170,4 +169,9 @@ def validate_password_complexity(password):
         boolean: true if the conditions are met, false otherwise.
     """
     pattern = re.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&.,()]{8,}$")
-    return re.search(pattern, password)
+    match = re.search(pattern, password)
+    
+    if match : return True
+    else: return False
+    # result = True if (match is True) else False
+    # return result

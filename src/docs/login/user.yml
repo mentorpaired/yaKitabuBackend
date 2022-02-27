@@ -29,3 +29,6 @@ responses:
 
   401:
     description: A user supplies incorrect credentials
+
+  500:
+    description: A user supplies incorrect credentials

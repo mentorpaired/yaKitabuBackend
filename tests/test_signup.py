@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from flask import jsonify
 
 from src import create_app
-from src.google import decode_token, login
+from src.user import validate_password_complexity
 from src.constants.http_status_codes import HTTP_200_OK, HTTP_201_CREATED, HTTP_405_METHOD_NOT_ALLOWED,HTTP_400_BAD_REQUEST
 
 
@@ -53,3 +53,39 @@ class TestSignUp(TestCase):
                                         content_type='application/json')
             response.status_code = login()
             self.assertEqual(response.status_code, HTTP_200_OK)
+            
+            
+    def test_valid_password(self):
+        """
+        Test for testing valid password.
+        """
+        
+        valid_password = "P@33word@12s#cret3"
+        self.assertEqual(True, validate_password_complexity(valid_password))
+        
+        
+    def test_invalid_password(self):
+        """
+        Test for testing valid password.
+        """
+        
+        invalid_password = "password"
+        self.assertEqual(False, validate_password_complexity(invalid_password))
+        
+        
+    def test_invalid_password(self):
+        """
+        Fruther test for testing valid password.
+        """
+        
+        invalid_password = "Password"
+        self.assertEqual(False, validate_password_complexity(invalid_password))
+        
+    def test_invalid_password(self):
+        """
+        Fruther test for testing valid password.
+        """
+        
+        invalid_password = "Password1"
+        self.assertEqual(False, validate_password_complexity(invalid_password))
+
