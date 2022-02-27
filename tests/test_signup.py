@@ -66,7 +66,7 @@ class TestSignUp(TestCase):
         
     def test_invalid_password(self):
         """
-        Test for testing valid password.
+        Test covering invalid password.
         """
         
         invalid_password = "password"
@@ -75,7 +75,7 @@ class TestSignUp(TestCase):
         
     def test_invalid_password(self):
         """
-        Fruther test for testing valid password.
+        Additional test for testing invalid password.
         """
         
         invalid_password = "Password"
@@ -83,7 +83,7 @@ class TestSignUp(TestCase):
         
     def test_invalid_password(self):
         """
-        Fruther test for testing valid password.
+        Additional test for testing invalid password.
         """
         
         invalid_password = "Password1"

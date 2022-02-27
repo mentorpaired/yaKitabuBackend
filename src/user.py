@@ -140,7 +140,6 @@ def login():
         password=password)
     if is_valid_pass:
         # TODO: Create access and refresh tokens.
-        
         user_info =  get_user_info(usr.id)
         
         # updates last login
