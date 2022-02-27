@@ -9,7 +9,7 @@ on:
   pull_request:
     branches: [ staging, main ]
   workflow_dispatch:
-    
+
 
 jobs:
   build:
@@ -38,6 +38,29 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
         
+          
+    - name: Test using unittest
+      run: |
+        python -m unittest
+      env:
+        TEST_TOKEN: ${{ secrets.TEST_TOKEN }}
+        DATABASE_URL: ${{ secrets.DATABASE_URI}}
+        EMAIL: ${{ secrets.EMAIL }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        CLIENT_ID: ${{ secrets.CLIENT_ID}}
+        TOKEN_ISSUER: ${{ secrets.TOKEN_ISSUER}}
+
+    - name: Run Migrations
+      env:
+        TEST_TOKEN: ${{ secrets.TEST_TOKEN }}
+        DATABASE_URL: ${{ secrets.DATABASE_URI}}
+        EMAIL: ${{ secrets.EMAIL }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        CLIENT_ID: ${{ secrets.CLIENT_ID}}
+        TOKEN_ISSUER: ${{ secrets.TOKEN_ISSUER}}
+      run: |
+          flask db migrate  
+          flask db upgrade
     - name: Build Notifications
       if: always()
       uses: act10ns/slack@v1.2.2
@@ -52,14 +75,3 @@ jobs:
         fields: |
           [{ "title": "Repository", "value": "${env.GITHUB_REPOSITORY}", "short": true },
           { "title": "Branch", "value": "${env.GITHUB_REF}", "short": true }]
-          
-    - name: Test using unittest
-      run: |
-        python -m unittest
-      env:
-        TEST_TOKEN: ${{ secrets.TEST_TOKEN }}
-        DATABASE_URL: ${{ secrets.DATABASE_URL}}
-        EMAIL: ${{ secrets.EMAIL }}
-        SECRET_KEY: ${{ secrets.SECRET_KEY }}
-        CLIENT_ID: ${{ secrets.CLIENT_ID}}
-        TOKEN_ISSUER: ${{ secrets.TOKEN_ISSUER}}
