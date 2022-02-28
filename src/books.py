@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from flasgger import swag_from
 
 from src.models import Book
@@ -12,11 +12,13 @@ books_bp = Blueprint('books', __name__, url_prefix='/api')
 @swag_from("./docs/books/available_books.yaml")
 def available_books():
 
-    books = Book.query.filter_by(is_available=True)
+    page = request.args.get("page", 1, type=int)
+    per_page = request.args.get("per-page", None, type=int)
+    books = Book.query.filter_by(is_available=True).paginate(page=page, per_page=per_page)
 
     books_object = []
 
-    for book in books:
+    for book in books.items:
         books_object.append({
             "id": book.id,
             "name": book.name,
@@ -25,4 +27,14 @@ def available_books():
             "isbn": book.isbn
         })
 
-    return jsonify(books_object), HTTP_200_OK
+    meta = {
+        "page": books.page,
+        "pages": books.pages,
+        "total_count": books.total,
+        "prev_page": books.prev_num,
+        "next_page": books.next_num,
+        "has_next": books.has_next,
+        "has_prev": books.has_prev
+    }
+
+    return jsonify({"data": books_object, "meta": meta}), HTTP_200_OK
